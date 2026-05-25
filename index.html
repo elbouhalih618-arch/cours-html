@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Puissance Électrique — 3ème Collège</title>
+<style>
+/* ===== VARIABLES & RESET ===== */
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --card: #1c2128;
+  --border: #30363d;
+  --accent: #f7b731;
+  --accent2: #fd9644;
+  --accent3: #45aaf2;
+  --green: #2dd4bf;
+  --red: #fc5c65;
+  --purple: #a55eea;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  --radius: 16px;
+  --radius-sm: 8px;
+  --font-head: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Trebuchet MS', 'Segoe UI', sans-serif;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+/* ===== SCREENS ===== */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ===== NAVIGATION ===== */
+.nav-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(13,17,23,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.nav-title { font-family: var(--font-head); font-size: 1rem; color: var(--accent); font-weight: bold; }
+.nav-steps { display: flex; gap: 6px; }
+.nav-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--border); cursor: pointer; transition: var(--transition);
+}
+.nav-dot.done { background: var(--green); }
+.nav-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.nav-score-badge {
+  background: var(--bg3); border: 1px solid var(--accent);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 0.85rem; color: var(--accent); font-weight: bold;
+}
+.dark-toggle {
+  background: none; border: 1px solid var(--border);
+  color: var(--text2); border-radius: 20px; padding: 4px 10px;
+  cursor: pointer; font-size: 0.8rem; transition: var(--transition);
+}
+.dark-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes spark {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+}
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes glow {
+  0%,100% { box-shadow: 0 0 20px rgba(247,183,49,0.3); }
+  50% { box-shadow: 0 0 40px rgba(247,183,49,0.7); }
+}
+@keyframes countUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+.animate-slideUp { animation: slideUp 0.6s ease forwards; }
+.animate-fadeIn { animation: fadeIn 0.5s ease forwards; }
+.animate-glow { animation: glow 2s ease-in-out infinite; }
+.animate-bounce { animation: bounce 1s ease infinite; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 28px; border-radius: 50px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 1rem; font-weight: bold;
+  transition: var(--transition); text-decoration: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #1a1a1a;
+  box-shadow: 0 4px 20px rgba(247,183,49,0.4);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(247,183,49,0.6); }
+.btn-secondary {
+  background: transparent; border: 2px solid var(--accent3);
+  color: var(--accent3);
+}
+.btn-secondary:hover { background: var(--accent3); color: var(--bg); transform: translateY(-2px); }
+.btn-ghost {
+  background: var(--bg3); color: var(--text2); border: 1px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
+}
+.card-glow { border-color: rgba(247,183,49,0.4); box-shadow: 0 0 24px rgba(247,183,49,0.1); }
+
+/* ===== CONTAINERS ===== */
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+.section { padding: 100px 0 60px; }
+
+/* ===== BADGE ===== */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;
+}
+.badge-physics { background: rgba(247,183,49,0.15); color: var(--accent); border: 1px solid rgba(247,183,49,0.3); }
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar-outer {
+  width: 100%; height: 8px; background: var(--bg3);
+  border-radius: 4px; overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 0.5s ease;
+}
+
+/* =============================
+   SCREEN 0 — ACCUEIL
+   ============================= */
+#screen-home {
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  background: radial-gradient(ellipse at 30% 40%, rgba(247,183,49,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 70%, rgba(69,170,242,0.06) 0%, transparent 50%),
+              var(--bg);
+  text-align: center; padding: 40px 20px;
+}
+.home-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.particle {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  animation: float linear infinite;
+  opacity: 0.4;
+}
+.home-content { position: relative; z-index: 2; max-width: 700px; }
+.home-badge { margin-bottom: 16px; }
+.home-svg { width: 220px; height: 220px; margin: 0 auto 24px; display: block; }
+.home-title {
+  font-family: var(--font-head); font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1; margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--accent), #fff 50%, var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.home-subtitle { font-size: 1.1rem; color: var(--text2); margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
+.home-formula {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 28px;
+  font-size: 1.4rem; font-weight: bold; margin-bottom: 36px;
+  animation: glow 3s ease-in-out infinite;
+}
+.home-formula span { color: var(--accent); }
+.home-formula .op { color: var(--text2); }
+.home-stats { display: flex; gap: 24px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+.home-stat { text-align: center; }
+.home-stat strong { display: block; font-size: 1.6rem; color: var(--accent); font-family: var(--font-head); }
+.home-stat span { font-size: 0.8rem; color: var(--text2); }
+
+/* =============================
+   SCREEN 1 — SITUATION-PROBLÈME
+   ============================= */
+.situ-header { text-align: center; margin-bottom: 40px; }
+.situ-header h2 { font-family: var(--font-head); font-size: 2rem; margin-bottom: 8px; }
+.situ-header p { color: var(--text2); }
+
+.appliances-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.appliance-card {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 20px; text-align: center;
+  cursor: pointer; transition: var(--transition); position: relative; overflow: hidden;
+}
+.appliance-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.appliance-card.selected { border-color: var(--accent); background: rgba(247,183,49,0.08); }
+.appliance-card .app-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.appliance-card .app-name { font-weight: bold; font-size: 1rem; margin-bottom: 4px; }
+.appliance-card .app-tag { font-size: 0.75rem; color: var(--text2); }
+.appliance-card .app-shine {
+  position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
+  transform: translateX(-100%); transition: transform 0.6s;
+}
+.appliance-card:hover .app-shine { transform: translateX(100%); }
+
+.situ-panel {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px; margin-bottom: 24px;
+  display: none;
+}
+.situ-panel.show { display: block; animation: slideUp 0.4s ease; }
+
+.situ-measures { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+.measure-box {
+  flex: 1; min-width: 140px; background: var(--bg3);
+  border-radius: var(--radius-sm); padding: 16px; text-align: center;
+}
+.measure-box .m-label { font-size: 0.8rem; color: var(--text2); margin-bottom: 4px; }
+.measure-box .m-value { font-size: 1.8rem; font-weight: bold; color: var(--accent); font-family: var(--font-head); }
+.measure-box .m-unit { font-size: 0.85rem; color: var(--text2); }
+
+.situ-questions { display: flex; flex-direction: column; gap: 16px; }
+.situ-q { background: var(--bg3); border-radius: var(--radius-sm); padding: 16px; }
+.situ-q .q-text { font-size: 0.95rem; margin-bottom: 12px; }
+.situ-q .q-options { display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; cursor: pointer;
+  transition: var(--transition); font-size: 0.9rem; text-align: left;
+}
+.q-opt:hover { border-color: var(--accent3); background: rgba(69,170,242,0.05); }
+.q-opt.correct { border-color: var(--green); background: rgba(45,212,191,0.1); color: var(--green); }
+.q-opt.wrong { border-color: var(--red); background: rgba(252,92,101,0.1); color: var(--red); }
+.q-opt.disabled { pointer-events: none; }
+.q-feedback {
+  margin-top: 10px; padding: 10px 14px; border-radius: 8px;
+  font-size: 0.85rem; display: none;
+}
+.q-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+.q-feedback.good { background: rgba(45,212,191,0.1); border-left: 3px solid var(--green); color: var(--green); }
+.q-feedback.bad { background: rgba(252,92,101,0.1); border-left: 3px solid var(--red); color: var(--red); }
+
+/* =============================
+   SCREEN 2 — COURS
+   ============================= */
+.cours-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.cours-tab {
+  padding: 8px 18px; border-radius: 50px;
+  border: 1px solid var(--border); background: var(--bg3);
+  color: var(--text2); cursor: pointer; font-size: 0.85rem; transition: var(--transition);
+}
+.cours-tab.active { background: var(--accent); color: #1a1a1a; border-color: var(--accent); font-weight: bold; }
+.cours-section { display: none; }
+.cours-section.active { display: block; animation: fadeIn 0.4s ease; }
+
+/* Formula card */
+.formula-big {
+  text-align: center; padding: 32px; border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(247,183,49,0.08), rgba(69,170,242,0.05));
+  border: 1px solid rgba(247,183,49,0.3); margin: 24px 0;
+}
+.formula-big .f-main {
+  font-size: 3rem; font-weight: bold; font-family: var(--font-head);
+  color: var(--accent); margin-bottom: 8px;
+}
+.formula-big .f-read { color: var(--text2); font-size: 0.9rem; }
+
+/* Symbol cards */
+.sym-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+.sym-card {
+  text-align: center; padding: 20px; border-radius: var(--radius);
+  border: 2px solid var(--border); cursor: pointer; transition: var(--transition);
+  position: relative; overflow: hidden;
+}
+.sym-card:hover { transform: translateY(-4px); }
+.sym-card .s-sym { font-size: 2.5rem; font-weight: bold; font-family: var(--font-head); }
+.sym-card .s-name { font-size: 0.9rem; color: var(--text2); margin: 6px 0 4px; }
+.sym-card .s-unit { font-size: 0.85rem; font-weight: bold; }
+.sym-card.power { border-color: var(--accent); }
+.sym-card.power .s-sym { color: var(--accent); }
+.sym-card.tension { border-color: var(--accent3); }
+.sym-card.tension .s-sym { color: var(--accent3); }
+.sym-card.intensity { border-color: var(--green); }
+.sym-card.intensity .s-sym { color: var(--green); }
+.sym-card.flipped .s-sym { display: none; }
+.sym-card.flipped .s-back { display: block; }
+.sym-card .s-back { display: none; font-size: 0.85rem; color: var(--text); line-height: 1.5; }
+
+/* Table */
+.recap-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+.recap-table th, .recap-table td {
+  padding: 12px 16px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.recap-table th { background: var(--bg3); color: var(--accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.recap-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* Def block */
+.def-block {
+  background: linear-gradient(135deg, rgba(165,94,234,0.1), rgba(247,183,49,0.05));
+  border-left: 4px solid var(--purple); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 16px 20px; margin: 16px 0;
+}
+.def-block strong { color: var(--purple); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+
+/* =============================
+   SCREEN 3 — SIMULATEUR
+   ============================= */
+.sim-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 640px) { .sim-layout { grid-template-columns: 1fr; } }
+
+.sim-controls .ctrl-group { margin-bottom: 24px; }
+.ctrl-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.ctrl-label span { font-size: 0.9rem; color: var(--text2); }
+.ctrl-label strong { color: var(--accent); font-size: 1.1rem; }
+input[type="range"] {
+  width: 100%; height: 6px; border-radius: 3px; outline: none;
+  -webkit-appearance: none; background: var(--bg3);
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); cursor: pointer;
+  box-shadow: 0 0 8px rgba(247,183,49,0.5);
+  transition: transform 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+.sim-display { text-align: center; }
+.sim-circuit { width: 100%; max-width: 320px; margin: 0 auto 20px; display: block; }
+.bulb-glow { transition: all 0.3s ease; }
+.power-meter {
+  background: var(--bg3); border-radius: var(--radius);
+  padding: 20px; margin-top: 16px;
+}
+.power-meter .pm-label { font-size: 0.85rem; color: var(--text2); margin-bottom: 4px; }
+.power-meter .pm-value {
+  font-size: 3rem; font-weight: bold; font-family: var(--font-head);
+  color: var(--accent); transition: color 0.3s;
+}
+.power-meter .pm-unit { font-size: 0.9rem; color: var(--text2); }
+.power-level-bar { height: 10px; border-radius: 5px; background: var(--bg2); overflow: hidden; margin-top: 12px; }
+.power-level-fill { height: 100%; border-radius: 5px; transition: width 0.3s, background 0.3s; }
+
+.power-categories { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
+.pwr-cat {
+  background: var(--bg3); border-radius: var(--radius-sm); padding: 10px 12px;
+  font-size: 0.8rem; border-left: 3px solid var(--border); transition: var(--transition);
+}
+.pwr-cat.active { border-color: var(--accent); background: rgba(247,183,49,0.05); }
+.pwr-cat .pwr-icon { font-size: 1.2rem; margin-bottom: 4px; }
+.pwr-cat .pwr-name { color: var(--text2); font-size: 0.75rem; }
+.pwr-cat .pwr-range { color: var(--text); font-weight: bold; font-size: 0.75rem; }
+
+/* =============================
+   SCREEN 4 — EXERCICES
+   ============================= */
+.exo-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; overflow-x: auto; }
+.exo-tab {
+  padding: 8px 16px; border-radius: 50px; border: 1px solid var(--border);
+  background: var(--bg3); color: var(--text2); cursor: pointer;
+  font-size: 0.8rem; white-space: nowrap; transition: var(--transition);
+}
+.exo-tab.active { background: var(--accent3); color: var(--bg); border-color: var(--accent3); font-weight: bold; }
+.exo-section { display: none; }
+.exo-section.active { display: block; animation: fadeIn 0.4s ease; }
+
+/* QCM */
+.qcm-block { background: var(--card); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+.qcm-q { font-size: 1rem; font-weight: bold; margin-bottom: 16px; }
+.qcm-opts { display: flex; flex-direction: column; gap: 10px; }
+.qcm-opt {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px; cursor: pointer; transition: var(--transition);
+}
+.qcm-opt:hover { border-color: var(--accent3); }
+.qcm-opt.correct { border-color: var(--green); background: rgba(45,212,191,0.08); }
+.qcm-opt.wrong { border-color: var(--red); background: rgba(252,92,101,0.08); }
+.qcm-opt.disabled { pointer-events: none; }
+.opt-letter {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: bold; flex-shrink: 0;
+}
+.qcm-explain {
+  margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 0.85rem; display: none;
+}
+.qcm-explain.show { display: block; animation: fadeIn 0.3s; }
+.qcm-explain.correct { background: rgba(45,212,191,0.08); border-left: 3px solid var(--green); color: var(--green); }
+.qcm-explain.wrong { background: rgba(252,92,101,0.08); border-left: 3px solid var(--red); color: var(--red); }
+
+/* Drag & drop */
+.drag-zone { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.drag-item {
+  padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; cursor: grab; font-size: 0.9rem; user-select: none;
+  transition: var(--transition);
+}
+.drag-item:hover { border-color: var(--accent); transform: scale(1.05); }
+.drag-item.dragging { opacity: 0.4; cursor: grabbing; }
+.drop-targets { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.drop-target {
+  min-width: 120px; min-height: 48px; border: 2px dashed var(--border);
+  border-radius: 8px; padding: 8px 12px; text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; color: var(--text2); transition: var(--transition);
+  flex: 1;
+}
+.drop-target.drag-over { border-color: var(--accent3); background: rgba(69,170,242,0.05); }
+.drop-target.filled { border-style: solid; border-color: var(--green); color: var(--text); background: rgba(45,212,191,0.05); }
+.drop-target.wrong-fill { border-color: var(--red); background: rgba(252,92,101,0.05); }
+
+/* Calculs guidés */
+.calc-block { background: var(--card); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+.calc-scenario { background: var(--bg3); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; font-size: 0.95rem; }
+.calc-steps { display: flex; flex-direction: column; gap: 12px; }
+.calc-step { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.calc-step label { font-size: 0.9rem; color: var(--text2); min-width: 100px; }
+.calc-input {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 12px; color: var(--text);
+  font-size: 1rem; width: 120px; text-align: center;
+  transition: var(--transition); outline: none;
+}
+.calc-input:focus { border-color: var(--accent3); }
+.calc-input.correct { border-color: var(--green); }
+.calc-input.wrong { border-color: var(--red); }
+.calc-unit { font-size: 0.85rem; color: var(--text2); }
+.calc-check {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 16px; color: var(--text2);
+  cursor: pointer; font-size: 0.85rem; transition: var(--transition);
+}
+.calc-check:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Matching */
+.match-zone { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.match-col { display: flex; flex-direction: column; gap: 8px; }
+.match-item {
+  padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg3); cursor: pointer; transition: var(--transition);
+  font-size: 0.9rem;
+}
+.match-item.selected { border-color: var(--accent3); background: rgba(69,170,242,0.08); }
+.match-item.matched { border-color: var(--green); background: rgba(45,212,191,0.08); pointer-events: none; }
+.match-item.wrong-match { border-color: var(--red); background: rgba(252,92,101,0.08); }
+.match-lines { position: relative; min-height: 100px; }
+
+/* =============================
+   SCREEN 5 — DÉFI FINAL
+   ============================= */
+.defi-header { text-align: center; margin-bottom: 32px; }
+.defi-header h2 { font-family: var(--font-head); font-size: 2.2rem; margin-bottom: 8px; }
+.defi-meta { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+.defi-badge {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 20px; text-align: center; min-width: 100px;
+}
+.defi-badge .db-val { font-size: 1.8rem; font-weight: bold; font-family: var(--font-head); color: var(--accent); }
+.defi-badge .db-label { font-size: 0.75rem; color: var(--text2); }
+
+.quiz-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+.quiz-num { font-size: 0.8rem; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.quiz-q { font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; line-height: 1.4; }
+.quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 500px) { .quiz-opts { grid-template-columns: 1fr; } }
+.quiz-opt {
+  background: var(--bg3); border: 2px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px; cursor: pointer;
+  transition: var(--transition); font-size: 0.9rem; text-align: left;
+}
+.quiz-opt:hover { border-color: var(--accent3); transform: scale(1.02); }
+.quiz-opt.correct { border-color: var(--green); background: rgba(45,212,191,0.1); }
+.quiz-opt.wrong { border-color: var(--red); background: rgba(252,92,101,0.1); }
+.quiz-opt.disabled { pointer-events: none; }
+
+/* Résultats */
+.result-screen { text-align: center; }
+.result-badge-big {
+  width: 120px; height: 120px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; margin: 0 auto 20px;
+  border: 4px solid var(--accent); box-shadow: 0 0 40px rgba(247,183,49,0.4);
+  animation: glow 2s infinite;
+}
+.result-score { font-size: 3rem; font-weight: bold; font-family: var(--font-head); color: var(--accent); }
+.result-msg { font-size: 1.2rem; color: var(--text2); margin: 12px 0 24px; }
+.result-stars { font-size: 2rem; margin-bottom: 24px; }
+.result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* Certificate */
+.cert-wrapper {
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--card) 100%);
+  border: 2px solid var(--accent); border-radius: var(--radius);
+  padding: 40px; max-width: 600px; margin: 0 auto; text-align: center;
+  box-shadow: 0 0 60px rgba(247,183,49,0.2);
+}
+.cert-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--accent); margin-bottom: 8px; }
+.cert-subtitle { color: var(--text2); font-size: 0.9rem; margin-bottom: 20px; }
+.cert-formula { font-size: 2.5rem; font-weight: bold; font-family: var(--font-head); color: var(--accent3); margin: 20px 0; }
+.cert-student { font-size: 1.2rem; color: var(--text); margin: 12px 0; }
+.cert-score { font-size: 1.6rem; color: var(--green); font-weight: bold; }
+.cert-date { font-size: 0.8rem; color: var(--text2); margin-top: 20px; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 50px; padding: 12px 24px; font-size: 0.9rem;
+  z-index: 200; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none; white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--green); color: var(--green); }
+.toast.error { border-color: var(--red); color: var(--red); }
+.toast.info { border-color: var(--accent3); color: var(--accent3); }
+
+/* ===== SECTION TITLES ===== */
+.sec-title { font-family: var(--font-head); font-size: 1.8rem; margin-bottom: 8px; }
+.sec-title span { color: var(--accent); }
+.sec-desc { color: var(--text2); margin-bottom: 28px; font-size: 0.95rem; }
+
+/* ===== SCORE TRACKER ===== */
+.score-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+.score-chip {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 14px; font-size: 0.8rem;
+}
+.score-chip span { color: var(--accent); font-weight: bold; }
+
+/* Light mode */
+body.light {
+  --bg: #f0f4f8; --bg2: #e2e8f0; --bg3: #cbd5e1;
+  --card: #ffffff; --border: #cbd5e1;
+  --text: #1e293b; --text2: #64748b;
+  --shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+/* ===== HINT BUBBLE ===== */
+.hint-btn {
+  background: none; border: 1px solid var(--accent); color: var(--accent);
+  border-radius: 50px; padding: 4px 12px; font-size: 0.8rem; cursor: pointer;
+  transition: var(--transition);
+}
+.hint-btn:hover { background: var(--accent); color: var(--bg); }
+.hint-box {
+  background: rgba(247,183,49,0.1); border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0; padding: 10px 14px;
+  font-size: 0.85rem; margin-top: 8px; display: none;
+}
+.hint-box.show { display: block; animation: fadeIn 0.3s; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .sym-cards { grid-template-columns: 1fr; }
+  .match-zone { grid-template-columns: 1fr; }
+  .nav-bar { padding: 8px 12px; }
+  .nav-title { font-size: 0.8rem; }
+}
+
+/* Floating particles (home) */
+#screen-home .particle:nth-child(1) { width:6px;height:6px; top:15%;left:10%; animation-duration:4s;animation-delay:0s; }
+#screen-home .particle:nth-child(2) { width:4px;height:4px; top:70%;left:20%; animation-duration:5s;animation-delay:1s; }
+#screen-home .particle:nth-child(3) { width:8px;height:8px; top:30%;left:80%; animation-duration:3s;animation-delay:2s; }
+#screen-home .particle:nth-child(4) { width:5px;height:5px; top:85%;left:70%; animation-duration:6s;animation-delay:0.5s; }
+#screen-home .particle:nth-child(5) { width:4px;height:4px; top:50%;left:5%; animation-duration:4.5s;animation-delay:1.5s; }
+#screen-home .particle:nth-child(6) { width:6px;height:6px; top:20%;left:55%; animation-duration:5.5s;animation-delay:2.5s; }
+
+/* Watt meter */
+.watt-display {
+  background: var(--bg3); border-radius: var(--radius-sm); padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px; margin-top: 12px;
+}
+.watt-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse 1s infinite; }
+.watt-text { font-size: 0.85rem; color: var(--text2); }
+.watt-text strong { color: var(--text); }
+
+/* Chips */
+.chip {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: bold;
+}
+.chip-p { background: rgba(247,183,49,0.15); color: var(--accent); }
+.chip-u { background: rgba(69,170,242,0.15); color: var(--accent3); }
+.chip-i { background: rgba(45,212,191,0.15); color: var(--green); }
+
+/* ===== STEP INDICATORS ===== */
+.step-indicator {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 28px;
+}
+.step-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: bold; cursor: pointer;
+  border: 2px solid var(--border); background: var(--bg3);
+  color: var(--text2); transition: var(--transition);
+}
+.step-dot.done { background: var(--green); border-color: var(--green); color: var(--bg); }
+.step-dot.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav-bar" id="mainNav" style="display:none;">
+  <div class="nav-title">⚡ Puissance Électrique</div>
+  <div class="nav-steps">
+    <div class="nav-dot" id="nd0" title="Accueil"></div>
+    <div class="nav-dot" id="nd1" title="Situation-problème"></div>
+    <div class="nav-dot" id="nd2" title="Cours"></div>
+    <div class="nav-dot" id="nd3" title="Simulateur"></div>
+    <div class="nav-dot" id="nd4" title="Exercices"></div>
+    <div class="nav-dot" id="nd5" title="Défi final"></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <div class="nav-score-badge">⭐ <span id="navScore">0</span> pts</div>
+    <button class="dark-toggle" onclick="toggleTheme()">☀ / ☾</button>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- =================== SCREEN 0: HOME =================== -->
+<section class="screen active" id="screen-home">
+  <div class="home-particles">
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+  </div>
+  <div class="home-content" style="padding-top:60px;">
+    <div class="home-badge">
+      <span class="badge badge-physics">⚡ Physique-Chimie · 3ème Collège</span>
+    </div>
+
+    <!-- SVG ILLUSTRATION -->
+    <svg class="home-svg animate-float" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Circuit board background -->
+      <circle cx="100" cy="100" r="90" fill="rgba(247,183,49,0.06)" stroke="rgba(247,183,49,0.2)" stroke-width="1.5"/>
+      <circle cx="100" cy="100" r="70" fill="rgba(247,183,49,0.04)" stroke="rgba(69,170,242,0.2)" stroke-width="1"/>
+      <!-- Lightning bolt -->
+      <path d="M115 30 L80 105 L100 105 L85 170 L130 85 L108 85 Z"
+        fill="none" stroke="url(#lgHome)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M115 30 L80 105 L100 105 L85 170 L130 85 L108 85 Z"
+        fill="url(#lgHomeFill)" opacity="0.7"/>
+      <!-- Orbit dots -->
+      <circle cx="100" cy="20" r="4" fill="#f7b731" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="170" cy="100" r="3" fill="#45aaf2" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="180" r="3" fill="#2dd4bf" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="240 100 100" to="600 100 100" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Circuit lines -->
+      <path d="M30 80 H60 V50 H80" stroke="rgba(69,170,242,0.3)" stroke-width="1.5" fill="none"/>
+      <path d="M30 120 H60 V150 H80" stroke="rgba(45,212,191,0.3)" stroke-width="1.5" fill="none"/>
+      <path d="M170 80 H140 V50 H120" stroke="rgba(247,183,49,0.3)" stroke-width="1.5" fill="none"/>
+      <path d="M170 120 H140 V150 H120" stroke="rgba(165,94,234,0.3)" stroke-width="1.5" fill="none"/>
+      <!-- Small dots at junctions -->
+      <circle cx="60" cy="80" r="3" fill="rgba(69,170,242,0.5)"/>
+      <circle cx="60" cy="120" r="3" fill="rgba(45,212,191,0.5)"/>
+      <circle cx="140" cy="80" r="3" fill="rgba(247,183,49,0.5)"/>
+      <circle cx="140" cy="120" r="3" fill="rgba(165,94,234,0.5)"/>
+      <defs>
+        <linearGradient id="lgHome" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#f7b731"/>
+          <stop offset="100%" style="stop-color:#fd9644"/>
+        </linearGradient>
+        <linearGradient id="lgHomeFill" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#f7b731;stop-opacity:0.3"/>
+          <stop offset="100%" style="stop-color:#fd9644;stop-opacity:0.1"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <h1 class="home-title">La Puissance<br>Électrique</h1>
+    <p class="home-subtitle">Découvre comment calculer, mesurer et comprendre la puissance des appareils électriques autour de toi.</p>
+
+    <div class="home-formula animate-glow">
+      <span>P</span><span class="op">=</span><span>U</span><span class="op">×</span><span>I</span>
+    </div>
+
+    <div class="home-stats">
+      <div class="home-stat">
+        <strong>7</strong>
+        <span>Objectifs</span>
+      </div>
+      <div class="home-stat">
+        <strong>5</strong>
+        <span>Modules</span>
+      </div>
+      <div class="home-stat">
+        <strong>20+</strong>
+        <span>Exercices</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="goToScreen(1)" style="font-size:1.1rem;padding:16px 40px;">
+      ⚡ Commencer l'aventure
+    </button>
+    <div style="margin-top:16px;">
+      <button class="btn btn-ghost" style="font-size:0.85rem;" onclick="loadScore()">📂 Reprendre ma progression</button>
+    </div>
+  </div>
+</section>
+
+<!-- =================== SCREEN 1: SITUATION-PROBLÈME =================== -->
+<section class="screen" id="screen-1">
+  <div class="container section">
+    <div class="situ-header">
+      <div class="badge badge-physics" style="margin-bottom:12px;">📍 Module 1</div>
+      <h2 class="sec-title">Situation — <span>Problème</span></h2>
+      <p class="sec-desc">Observe ces appareils électriques et réponds aux questions pour découvrir la notion de puissance.</p>
+    </div>
+
+    <div class="appliances-grid">
+      <div class="appliance-card" onclick="selectAppliance('bouilloire')">
+        <div class="app-shine"></div>
+        <div class="app-icon">🫖</div>
+        <div class="app-name">Bouilloire</div>
+        <div class="app-tag">Cuisine</div>
+      </div>
+      <div class="appliance-card" onclick="selectAppliance('lampe')">
+        <div class="app-shine"></div>
+        <div class="app-icon">💡</div>
+        <div class="app-name">Lampe LED</div>
+        <div class="app-tag">Éclairage</div>
+      </div>
+      <div class="appliance-card" onclick="selectAppliance('chargeur')">
+        <div class="app-shine"></div>
+        <div class="app-icon">🔌</div>
+        <div class="app-name">Chargeur</div>
+        <div class="app-tag">Mobile</div>
+      </div>
+      <div class="appliance-card" onclick="selectAppliance('tele')">
+        <div class="app-shine"></div>
+        <div class="app-icon">📺</div>
+        <div class="app-name">Télévision</div>
+        <div class="app-tag">Multimédia</div>
+      </div>
+    </div>
+
+    <div id="situPanel" class="situ-panel">
+      <h3 id="situAppName" style="margin-bottom:16px;font-size:1.2rem;"></h3>
+      <div class="situ-measures">
+        <div class="measure-box">
+          <div class="m-label">⚡ Tension</div>
+          <div class="m-value" id="situU">—</div>
+          <div class="m-unit">Volt (V)</div>
+        </div>
+        <div class="measure-box">
+          <div class="m-label">〜 Intensité</div>
+          <div class="m-value" id="situI">—</div>
+          <div class="m-unit">Ampère (A)</div>
+        </div>
+        <div class="measure-box">
+          <div class="m-label">⚡ Puissance</div>
+          <div class="m-value" id="situP">—</div>
+          <div class="m-unit">Watt (W)</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <button class="hint-btn" onclick="toggleHint('situHint')">💡 Indice</button>
+        <div class="hint-box" id="situHint">
+          La puissance P indique combien d'énergie électrique un appareil consomme chaque seconde. Plus la puissance est grande, plus l'appareil consomme !
+        </div>
+      </div>
+
+      <div class="situ-questions" id="situQuestions"></div>
+
+      <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="goToScreen(2)">📚 Découvrir le cours →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== SCREEN 2: COURS =================== -->
+<section class="screen" id="screen-2">
+  <div class="container section">
+    <div style="margin-bottom:28px;">
+      <div class="badge badge-physics" style="margin-bottom:12px;">📚 Module 2</div>
+      <h2 class="sec-title">Le <span>Cours</span></h2>
+      <p class="sec-desc">Explore chaque notion progressivement. Clique sur les onglets pour naviguer.</p>
+    </div>
+
+    <div class="cours-nav">
+      <button class="cours-tab active" onclick="switchCoursTab(0,this)">1. Définition</button>
+      <button class="cours-tab" onclick="switchCoursTab(1,this)">2. La Formule</button>
+      <button class="cours-tab" onclick="switchCoursTab(2,this)">3. Les Symboles</button>
+      <button class="cours-tab" onclick="switchCoursTab(3,this)">4. Tableau Récap</button>
+      <button class="cours-tab" onclick="switchCoursTab(4,this)">5. Plaque Signalétique</button>
+    </div>
+
+    <!-- TAB 0: DEFINITION -->
+    <div class="cours-section active" id="ct0">
+      <div class="card card-glow" style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(247,183,49,0.15);display:flex;align-items:center;justify-content:center;font-size:1.8rem;">⚡</div>
+          <h3 style="font-family:var(--font-head);font-size:1.4rem;">Qu'est-ce que la puissance électrique ?</h3>
+        </div>
+        <div class="def-block">
+          <strong>Définition</strong>
+          La <b>puissance électrique</b> d'un appareil indique la quantité d'énergie électrique qu'il consomme (ou fournit) par unité de temps.
+        </div>
+        <p style="color:var(--text2);margin-top:12px;font-size:0.95rem;line-height:1.7;">
+          En d'autres termes : c'est la vitesse à laquelle un appareil électrique transforme l'énergie électrique en une autre forme d'énergie (chaleur, lumière, mouvement...).
+        </p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;">
+        <div class="card" style="border-color:var(--accent);background:rgba(247,183,49,0.03);">
+          <div style="font-size:1.5rem;margin-bottom:8px;">🫖</div>
+          <div style="font-weight:bold;margin-bottom:4px;">Bouilloire 2000 W</div>
+          <div style="font-size:0.85rem;color:var(--text2);">Chauffe l'eau très rapidement — consomme beaucoup d'énergie par seconde.</div>
+        </div>
+        <div class="card" style="border-color:var(--accent3);">
+          <div style="font-size:1.5rem;margin-bottom:8px;">💡</div>
+          <div style="font-weight:bold;margin-bottom:4px;">Lampe LED 9 W</div>
+          <div style="font-size:0.85rem;color:var(--text2);">Consomme très peu d'énergie par seconde pour produire de la lumière.</div>
+        </div>
+        <div class="card" style="border-color:var(--green);">
+          <div style="font-size:1.5rem;margin-bottom:8px;">🔌</div>
+          <div style="font-weight:bold;margin-bottom:4px;">Chargeur 18 W</div>
+          <div style="font-size:0.85rem;color:var(--text2);">Recharge rapidement une batterie en transférant l'énergie.</div>
+        </div>
+      </div>
+
+      <div class="card" style="border-color:rgba(165,94,234,0.4);background:rgba(165,94,234,0.03);">
+        <h4 style="color:var(--purple);margin-bottom:8px;">⚡ vs 🔋 Puissance vs Énergie</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:0.9rem;">
+          <div>
+            <div style="color:var(--accent);font-weight:bold;margin-bottom:4px;">Puissance (W)</div>
+            <div style="color:var(--text2);">C'est la vitesse de consommation. <br>Comme la vitesse d'une voiture (km/h).</div>
+          </div>
+          <div>
+            <div style="color:var(--green);font-weight:bold;margin-bottom:4px;">Énergie (J ou kWh)</div>
+            <div style="color:var(--text2);">C'est la quantité totale consommée. <br>Comme la distance parcourue (km).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: FORMULA -->
+    <div class="cours-section" id="ct1">
+      <div class="formula-big">
+        <div class="f-main" id="formulaAnim">P = U × I</div>
+        <div class="f-read">Puissance = Tension × Intensité</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+        <div style="background:rgba(247,183,49,0.08);border:1px solid rgba(247,183,49,0.3);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+          <div style="font-size:2rem;font-weight:bold;color:var(--accent);font-family:var(--font-head);">P</div>
+          <div style="font-size:0.85rem;color:var(--text2);margin:4px 0;">Puissance</div>
+          <div style="font-size:1rem;font-weight:bold;color:var(--accent);">Watt (W)</div>
+        </div>
+        <div style="background:rgba(69,170,242,0.08);border:1px solid rgba(69,170,242,0.3);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+          <div style="font-size:2rem;font-weight:bold;color:var(--accent3);font-family:var(--font-head);">U</div>
+          <div style="font-size:0.85rem;color:var(--text2);margin:4px 0;">Tension</div>
+          <div style="font-size:1rem;font-weight:bold;color:var(--accent3);">Volt (V)</div>
+        </div>
+        <div style="background:rgba(45,212,191,0.08);border:1px solid rgba(45,212,191,0.3);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+          <div style="font-size:2rem;font-weight:bold;color:var(--green);font-family:var(--font-head);">I</div>
+          <div style="font-size:0.85rem;color:var(--text2);margin:4px 0;">Intensité</div>
+          <div style="font-size:1rem;font-weight:bold;color:var(--green);">Ampère (A)</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h4 style="margin-bottom:12px;">📐 Dériver la formule</h4>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.9rem;">
+          <div style="flex:1;min-width:160px;background:var(--bg3);border-radius:var(--radius-sm);padding:12px;text-align:center;">
+            <div style="color:var(--text2);font-size:0.8rem;margin-bottom:4px;">Calculer U</div>
+            <div style="font-weight:bold;font-size:1.1rem;color:var(--accent3);">U = P ÷ I</div>
+          </div>
+          <div style="flex:1;min-width:160px;background:var(--bg3);border-radius:var(--radius-sm);padding:12px;text-align:center;">
+            <div style="color:var(--text2);font-size:0.8rem;margin-bottom:4px;">Calculer I</div>
+            <div style="font-weight:bold;font-size:1.1rem;color:var(--green);">I = P ÷ U</div>
+          </div>
+          <div style="flex:1;min-width:160px;background:var(--bg3);border-radius:var(--radius-sm);padding:12px;text-align:center;">
+            <div style="color:var(--text2);font-size:0.8rem;margin-bottom:4px;">Calculer P</div>
+            <div style="font-weight:bold;font-size:1.1rem;color:var(--accent);">P = U × I</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="background:rgba(247,183,49,0.04);border-color:rgba(247,183,49,0.2);">
+        <h4 style="margin-bottom:10px;">💡 Exemple concret</h4>
+        <p style="color:var(--text2);font-size:0.9rem;line-height:1.7;">
+          Une ampoule branchée sur le réseau électrique marocain (U = 220 V) est traversée par un courant d'intensité I = 0,05 A.<br><br>
+          <strong style="color:var(--accent);">P = U × I = 220 × 0,05 = <span style="font-size:1.2rem;">11 W</span></strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- TAB 2: SYMBOLS -->
+    <div class="cours-section" id="ct2">
+      <p style="color:var(--text2);margin-bottom:20px;">Clique sur chaque carte pour découvrir plus d'informations.</p>
+      <div class="sym-cards">
+        <div class="sym-card power" onclick="flipCard(this)">
+          <div class="s-sym">P</div>
+          <div class="s-name">Puissance électrique</div>
+          <div class="s-unit" style="color:var(--accent);">Watt (W)</div>
+          <div class="s-back">
+            La puissance électrique P mesure la rapidité avec laquelle l'énergie est transformée.<br><br>
+            <span class="chip chip-p">multiples : mW, kW, MW</span><br><br>
+            1 kW = 1 000 W<br>
+            1 MW = 1 000 000 W
+          </div>
+        </div>
+        <div class="sym-card tension" onclick="flipCard(this)">
+          <div class="s-sym">U</div>
+          <div class="s-name">Tension électrique</div>
+          <div class="s-unit" style="color:var(--accent3);">Volt (V)</div>
+          <div class="s-back">
+            La tension U (ou différence de potentiel) est la "pression" qui pousse les électrons.<br><br>
+            <span class="chip chip-u">Mesurée par un voltmètre</span><br><br>
+            Réseau marocain : 220 V<br>
+            Batterie : 1,5 V à 12 V
+          </div>
+        </div>
+        <div class="sym-card intensity" onclick="flipCard(this)">
+          <div class="s-sym">I</div>
+          <div class="s-name">Intensité du courant</div>
+          <div class="s-unit" style="color:var(--green);">Ampère (A)</div>
+          <div class="s-back">
+            L'intensité I est le nombre d'électrons qui circulent par seconde dans le circuit.<br><br>
+            <span class="chip chip-i">Mesurée par un ampèremètre</span><br><br>
+            1 A = 1 coulomb par seconde<br>
+            mA (milliampère) = 0,001 A
+          </div>
+        </div>
+      </div>
+      <p style="color:var(--text2);font-size:0.8rem;text-align:center;margin-top:12px;">↩ Clique à nouveau pour retourner la carte</p>
+    </div>
+
+    <!-- TAB 3: RECAP TABLE -->
+    <div class="cours-section" id="ct3">
+      <div class="card">
+        <h3 style="margin-bottom:16px;font-family:var(--font-head);">Tableau Récapitulatif</h3>
+        <div style="overflow-x:auto;">
+          <table class="recap-table">
+            <thead>
+              <tr>
+                <th>Grandeur</th>
+                <th>Symbole</th>
+                <th>Unité</th>
+                <th>Symbole unité</th>
+                <th>Instrument</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Puissance électrique</td>
+                <td><span style="color:var(--accent);font-weight:bold;font-size:1.1rem;">P</span></td>
+                <td>Watt</td>
+                <td><span style="color:var(--accent);font-weight:bold;">W</span></td>
+                <td>Wattmètre</td>
+              </tr>
+              <tr>
+                <td>Tension électrique</td>
+                <td><span style="color:var(--accent3);font-weight:bold;font-size:1.1rem;">U</span></td>
+                <td>Volt</td>
+                <td><span style="color:var(--accent3);font-weight:bold;">V</span></td>
+                <td>Voltmètre</td>
+              </tr>
+              <tr>
+                <td>Intensité du courant</td>
+                <td><span style="color:var(--green);font-weight:bold;font-size:1.1rem;">I</span></td>
+                <td>Ampère</td>
+                <td><span style="color:var(--green);font-weight:bold;">A</span></td>
+                <td>Ampèremètre</td>
+              </tr>
+              <tr>
+                <td>Énergie électrique</td>
+                <td><span style="color:var(--purple);font-weight:bold;font-size:1.1rem;">E</span></td>
+                <td>Joule / kWh</td>
+                <td><span style="color:var(--purple);font-weight:bold;">J / kWh</span></td>
+                <td>Compteur</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h4 style="margin-bottom:12px;">📊 Puissances types d'appareils</h4>
+        <div style="overflow-x:auto;">
+          <table class="recap-table">
+            <thead>
+              <tr><th>Appareil</th><th>Puissance</th><th>Observation</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>💡 Lampe LED</td><td style="color:var(--green);font-weight:bold;">5 – 15 W</td><td style="color:var(--text2);font-size:0.85rem;">Très économique</td></tr>
+              <tr><td>📺 Télévision</td><td style="color:var(--accent3);font-weight:bold;">80 – 200 W</td><td style="color:var(--text2);font-size:0.85rem;">Consommation moyenne</td></tr>
+              <tr><td>🔌 Chargeur</td><td style="color:var(--accent3);font-weight:bold;">10 – 65 W</td><td style="color:var(--text2);font-size:0.85rem;">Variable selon modèle</td></tr>
+              <tr><td>🫖 Bouilloire</td><td style="color:var(--accent);font-weight:bold;">1 500 – 2 200 W</td><td style="color:var(--text2);font-size:0.85rem;">Forte consommation</td></tr>
+              <tr><td>❄️ Réfrigérateur</td><td style="color:var(--accent);font-weight:bold;">100 – 400 W</td><td style="color:var(--text2);font-size:0.85rem;">Fonctionne 24h/24</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PLAQUE SIGNALETIQUE -->
+    <div class="cours-section" id="ct4">
+      <p style="color:var(--text2);margin-bottom:20px;">La plaque signalétique est une étiquette fixée sur chaque appareil électrique. Elle contient des informations importantes.</p>
+
+      <!-- Fake label SVG -->
+      <div style="display:flex;justify-content:center;margin-bottom:24px;">
+        <svg viewBox="0 0 340 200" width="340" height="200" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;border-radius:var(--radius);overflow:visible;">
+          <rect x="0" y="0" width="340" height="200" rx="12" ry="12" fill="#21262d" stroke="#f7b731" stroke-width="2"/>
+          <rect x="10" y="10" width="320" height="180" rx="8" ry="8" fill="none" stroke="#30363d" stroke-width="1"/>
+
+          <text x="170" y="38" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#f7b731" font-weight="bold">PLAQUE SIGNALÉTIQUE</text>
+          <line x1="20" y1="46" x2="320" y2="46" stroke="#30363d" stroke-width="1"/>
+
+          <text x="30" y="72" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#e6edf3" font-weight="bold">Marque :</text>
+          <text x="130" y="72" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#8b949e">ElectroMed Pro</text>
+
+          <text x="30" y="96" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#e6edf3" font-weight="bold">Modèle :</text>
+          <text x="130" y="96" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#8b949e">KT-2200X</text>
+
+          <text x="30" y="120" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#45aaf2" font-weight="bold">Tension (U) :</text>
+          <text x="130" y="120" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#45aaf2" font-weight="bold">220 – 240 V ~</text>
+
+          <text x="30" y="144" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#2dd4bf" font-weight="bold">Intensité (I) :</text>
+          <text x="130" y="144" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#2dd4bf" font-weight="bold">10 A</text>
+
+          <text x="30" y="168" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#f7b731" font-weight="bold">Puissance (P) :</text>
+          <text x="130" y="168" font-family="Trebuchet MS,sans-serif" font-size="12" fill="#f7b731" font-weight="bold">2200 W</text>
+
+          <text x="280" y="168" text-anchor="middle" font-family="Trebuchet MS,sans-serif" font-size="10" fill="#8b949e">CE</text>
+          <rect x="260" y="155" width="40" height="18" rx="2" fill="none" stroke="#30363d" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+        <div class="card" style="border-color:rgba(69,170,242,0.4);">
+          <div style="color:var(--accent3);font-weight:bold;margin-bottom:8px;">🔵 Tension : 220-240 V</div>
+          <div style="font-size:0.85rem;color:var(--text2);">C'est la tension du réseau électrique. En Europe et au Maroc, c'est 220 V alternatif (~).</div>
+        </div>
+        <div class="card" style="border-color:rgba(45,212,191,0.4);">
+          <div style="color:var(--green);font-weight:bold;margin-bottom:8px;">🟢 Intensité : 10 A</div>
+          <div style="font-size:0.85rem;color:var(--text2);">L'intensité maximale que l'appareil peut supporter. Dépasse-t-on cette valeur ? L'appareil peut brûler !</div>
+        </div>
+        <div class="card" style="border-color:rgba(247,183,49,0.4);">
+          <div style="color:var(--accent);font-weight:bold;margin-bottom:8px;">🟡 Puissance : 2200 W</div>
+          <div style="font-size:0.85rem;color:var(--text2);">La puissance indiquée confirme : P = 220 × 10 = 2200 W. C'est bien cohérent avec la formule P = U × I !</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="goToScreen(3)">🔬 Simulateur →</button>
+      <button class="btn btn-ghost" onclick="goToScreen(1)">← Situation</button>
+    </div>
+  </div>
+</section>
+
+<!-- =================== SCREEN 3: SIMULATEUR =================== -->
+<section class="screen" id="screen-3">
+  <div class="container section">
+    <div style="margin-bottom:28px;">
+      <div class="badge badge-physics" style="margin-bottom:12px;">🔬 Module 3</div>
+      <h2 class="sec-title">Simulateur <span>Interactif</span></h2>
+      <p class="sec-desc">Modifie la tension U et l'intensité I pour voir comment la puissance P change en temps réel.</p>
+    </div>
+
+    <div class="sim-layout">
+      <!-- Controls -->
+      <div class="sim-controls card">
+        <h4 style="margin-bottom:20px;font-family:var(--font-head);">⚙️ Paramètres du circuit</h4>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">
+            <span>🔵 Tension <b>U</b></span>
+            <strong><span id="simUVal">220</span> V</strong>
+          </div>
+          <input type="range" min="1" max="400" value="220" id="simU" oninput="updateSim()">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text2);margin-top:4px;">
+            <span>1 V</span><span>200 V</span><span>400 V</span>
+          </div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">
+            <span>🟢 Intensité <b>I</b></span>
+            <strong><span id="simIVal">2.0</span> A</strong>
+          </div>
+          <input type="range" min="0.1" max="20" step="0.1" value="2" id="simI" oninput="updateSim()">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text2);margin-top:4px;">
+            <span>0.1 A</span><span>10 A</span><span>20 A</span>
+          </div>
+        </div>
+
+        <div class="power-meter">
+          <div class="pm-label">⚡ Puissance calculée</div>
+          <div class="pm-value" id="simPDisplay">440</div>
+          <div class="pm-unit">Watts</div>
+          <div style="margin-top:8px;font-size:0.8rem;color:var(--text2);">
+            P = <span id="simULabel" style="color:var(--accent3);">220</span> V × <span id="simILabel" style="color:var(--green);">2,0</span> A = <span id="simPLabel" style="color:var(--accent);">440</span> W
+          </div>
+          <div class="power-level-bar"><div class="power-level-fill" id="simPBar" style="width:22%;background:var(--accent3);"></div></div>
+        </div>
+
+        <div class="watt-display">
+          <div class="watt-dot" id="simDot" style="background:var(--accent3);"></div>
+          <div class="watt-text" id="simStatus">Consommation <strong>modérée</strong></div>
+        </div>
+      </div>
+
+      <!-- Visual -->
+      <div class="sim-display card">
+        <h4 style="margin-bottom:16px;font-family:var(--font-head);">💡 Circuit électrique</h4>
+
+        <!-- Circuit SVG -->
+        <svg id="circuitSVG" viewBox="0 0 280 200" width="100%" xmlns="http://www.w3.org/2000/svg" class="sim-circuit">
+          <!-- Circuit wires -->
+          <rect x="20" y="30" width="240" height="140" rx="8" fill="none" stroke="#30363d" stroke-width="2.5"/>
+
+          <!-- Battery (left) -->
+          <line x1="20" y1="80" x2="20" y2="120" stroke="#30363d" stroke-width="2.5"/>
+          <line x1="12" y1="88" x2="28" y2="88" stroke="#45aaf2" stroke-width="3"/>
+          <line x1="15" y1="100" x2="25" y2="100" stroke="#45aaf2" stroke-width="2"/>
+          <line x1="12" y1="112" x2="28" y2="112" stroke="#45aaf2" stroke-width="3"/>
+          <text x="20" y="145" text-anchor="middle" font-family="Trebuchet MS" font-size="9" fill="#45aaf2">U (V)</text>
+
+          <!-- Bulb (top center) -->
+          <circle cx="140" cy="30" r="16" fill="rgba(30,30,30,0.8)" stroke="#30363d" stroke-width="2" id="bulbCircle"/>
+          <path d="M134 30 L140 22 L146 30 L140 38 Z" fill="none" stroke="#f7b731" stroke-width="2" id="bulbBolt" opacity="0.3"/>
+          <circle cx="140" cy="30" r="12" fill="none" stroke="#f7b731" stroke-width="1" id="bulbGlow" opacity="0.2"/>
+
+          <!-- Ammeter (bottom) -->
+          <circle cx="140" cy="170" r="14" fill="var(--bg3)" stroke="#2dd4bf" stroke-width="2"/>
+          <text x="140" y="175" text-anchor="middle" font-family="Trebuchet MS" font-size="10" font-weight="bold" fill="#2dd4bf">A</text>
+
+          <!-- Current flow dots animation -->
+          <circle r="4" fill="#f7b731" opacity="0.8" id="currentDot1">
+            <animateMotion dur="2s" repeatCount="indefinite" calcMode="linear">
+              <mpath href="#currentPath"/>
+            </animateMotion>
+          </circle>
+          <circle r="3" fill="#f7b731" opacity="0.5" id="currentDot2">
+            <animateMotion dur="2s" begin="0.67s" repeatCount="indefinite" calcMode="linear">
+              <mpath href="#currentPath"/>
+            </animateMotion>
+          </circle>
+          <circle r="3" fill="#f7b731" opacity="0.5" id="currentDot3">
+            <animateMotion dur="2s" begin="1.33s" repeatCount="indefinite" calcMode="linear">
+              <mpath href="#currentPath"/>
+            </animateMotion>
+          </circle>
+          <path id="currentPath" d="M20,30 H260 V170 H20 V30" fill="none"/>
+
+          <!-- Labels -->
+          <text x="80" y="24" font-family="Trebuchet MS" font-size="9" fill="#f7b731">P = U × I</text>
+        </svg>
+
+        <!-- Lamp glow visual -->
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="position:relative;display:inline-block;">
+            <div id="lampGlowBg" style="position:absolute;inset:-20px;border-radius:50%;background:rgba(247,183,49,0.15);filter:blur(10px);transition:all 0.3s;"></div>
+            <div style="font-size:3rem;position:relative;z-index:1;transition:filter 0.3s;" id="lampEmoji">💡</div>
+          </div>
+          <div style="font-size:0.85rem;color:var(--text2);margin-top:8px;" id="lampDesc">Luminosité normale</div>
+        </div>
+
+        <div class="power-categories">
+          <div class="pwr-cat" id="pc0">
+            <div class="pwr-icon">💡</div>
+            <div class="pwr-name">Lampe LED</div>
+            <div class="pwr-range">5 – 15 W</div>
+          </div>
+          <div class="pwr-cat" id="pc1">
+            <div class="pwr-icon">📺</div>
+            <div class="pwr-name">Télévision</div>
+            <div class="pwr-range">80 – 200 W</div>
+          </div>
+          <div class="pwr-cat" id="pc2">
+            <div class="pwr-icon">🔌</div>
+            <div class="pwr-name">Chargeur</div>
+            <div class="pwr-range">10 – 65 W</div>
+          </div>
+          <div class="pwr-cat" id="pc3">
+            <div class="pwr-icon">🫖</div>
+            <div class="pwr-name">Bouilloire</div>
+            <div class="pwr-range">1500 – 2200 W</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="goToScreen(4)">📝 Exercices →</button>
+      <button class="btn btn-ghost" onclick="goToScreen(2)">← Cours</button>
+    </div>
+  </div>
+</section>
+
+<!-- =================== SCREEN 4: EXERCICES =================== -->
+<section class="screen" id="screen-4">
+  <div class="container section">
+    <div style="margin-bottom:28px;">
+      <div class="badge badge-physics" style="margin-bottom:12px;">📝 Module 4</div>
+      <h2 class="sec-title">Exercices <span>Interactifs</span></h2>
+      <p class="sec-desc">Mets tes connaissances à l'épreuve avec différents types d'activités.</p>
+    </div>
+
+    <div class="score-row">
+      <div class="score-chip">Score exercices : <span id="exoScore">0</span> pts</div>
+      <div class="score-chip">Réussite : <span id="exoPercent">0</span>%</div>
+    </div>
+
+    <div class="exo-tabs">
+      <button class="exo-tab active" onclick="switchExoTab(0,this)">1. QCM</button>
+      <button class="exo-tab" onclick="switchExoTab(1,this)">2. Glisser-Déposer</button>
+      <button class="exo-tab" onclick="switchExoTab(2,this)">3. Calculs Guidés</button>
+      <button class="exo-tab" onclick="switchExoTab(3,this)">4. Association</button>
+    </div>
+
+    <!-- EXO 0: QCM -->
+    <div class="exo-section active" id="ex0">
+
+      <div class="qcm-block" id="qcm1">
+        <div class="qcm-q">❓ Quel est le symbole de l'unité de la puissance électrique ?</div>
+        <div class="qcm-opts">
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm1',false,'Le Volt (V) est l\'unité de la tension, pas de la puissance.')">
+            <div class="opt-letter">A</div> Volt (V)
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm1',true,'Correct ! Le Watt (W) est l\'unité de la puissance électrique. 1 W = 1 V × 1 A.')">
+            <div class="opt-letter">B</div> Watt (W)
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm1',false,'L\'Ampère (A) est l\'unité de l\'intensité du courant.')">
+            <div class="opt-letter">C</div> Ampère (A)
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm1',false,'Le Joule (J) est l\'unité de l\'énergie, pas de la puissance.')">
+            <div class="opt-letter">D</div> Joule (J)
+          </div>
+        </div>
+        <div class="qcm-explain" id="qcm1-explain"></div>
+      </div>
+
+      <div class="qcm-block" id="qcm2">
+        <div class="qcm-q">❓ Une lampe est branchée sous une tension de U = 12 V. L'intensité qui la traverse est I = 0,5 A. Quelle est sa puissance ?</div>
+        <div class="qcm-opts">
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm2',false,'Attention : P = U × I, il faut multiplier et non additionner.')">
+            <div class="opt-letter">A</div> P = 12,5 W
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm2',false,'Attention : P = U × I = 12 × 0,5. Relis bien le calcul.')">
+            <div class="opt-letter">B</div> P = 24 W
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm2',true,'Parfait ! P = U × I = 12 × 0,5 = 6 W. C\'est bien ça !')">
+            <div class="opt-letter">C</div> P = 6 W
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm2',false,'Non. P = 12 × 0,5 = 6 W. Vérifie ton calcul.')">
+            <div class="opt-letter">D</div> P = 0,6 W
+          </div>
+        </div>
+        <div class="qcm-explain" id="qcm2-explain"></div>
+      </div>
+
+      <div class="qcm-block" id="qcm3">
+        <div class="qcm-q">❓ Un appareil a une puissance P = 2 200 W et est branché sur le réseau à U = 220 V. Quelle est l'intensité du courant ?</div>
+        <div class="qcm-opts">
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm3',false,'Non. I = P ÷ U = 2200 ÷ 220. Relis la formule dérivée.')">
+            <div class="opt-letter">A</div> I = 0,1 A
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm3',true,'Excellent ! I = P ÷ U = 2200 ÷ 220 = 10 A. Bravo !')">
+            <div class="opt-letter">B</div> I = 10 A
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm3',false,'Non. I = P ÷ U = 2200 ÷ 220 = 10 A.')">
+            <div class="opt-letter">C</div> I = 100 A
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm3',false,'Non. I = P ÷ U = 2200 ÷ 220 = 10 A.')">
+            <div class="opt-letter">D</div> I = 2 A
+          </div>
+        </div>
+        <div class="qcm-explain" id="qcm3-explain"></div>
+      </div>
+
+      <div class="qcm-block" id="qcm4">
+        <div class="qcm-q">❓ Quelle affirmation est correcte concernant puissance et énergie ?</div>
+        <div class="qcm-opts">
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm4',false,'Non. Puissance et énergie sont deux grandeurs différentes.')">
+            <div class="opt-letter">A</div> La puissance et l'énergie sont la même grandeur.
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm4',true,'Correct ! La puissance mesure la vitesse de consommation d\'énergie. L\'énergie = puissance × durée.')">
+            <div class="opt-letter">B</div> L'énergie consommée dépend de la puissance et de la durée d'utilisation.
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm4',false,'Non. La puissance s\'exprime en Watt (W), l\'énergie en Joule (J) ou kWh.')">
+            <div class="opt-letter">C</div> La puissance s'exprime en Joule (J).
+          </div>
+          <div class="qcm-opt" onclick="checkQCM(this,'qcm4',false,'Non. Un appareil plus puissant consomme plus d\'énergie si la durée est identique.')">
+            <div class="opt-letter">D</div> Un appareil moins puissant consomme toujours plus d'énergie.
+          </div>
+        </div>
+        <div class="qcm-explain" id="qcm4-explain"></div>
+      </div>
+    </div>
+
+    <!-- EXO 1: DRAG & DROP -->
+    <div class="exo-section" id="ex1">
+      <div class="card" style="margin-bottom:20px;">
+        <h4 style="margin-bottom:12px;">📦 Glisser-Déposer — Associe chaque symbole à sa grandeur</h4>
+        <p style="color:var(--text2);font-size:0.85rem;margin-bottom:16px;">Fais glisser chaque étiquette vers la bonne case.</p>
+
+        <div class="drag-zone" id="dragItems">
+          <div class="drag-item" draggable="true" id="di-P" data-val="P">P</div>
+          <div class="drag-item" draggable="true" id="di-U" data-val="U">U</div>
+          <div class="drag-item" draggable="true" id="di-I" data-val="I">I</div>
+          <div class="drag-item" draggable="true" id="di-W" data-val="W">W</div>
+          <div class="drag-item" draggable="true" id="di-V" data-val="V">V</div>
+          <div class="drag-item" draggable="true" id="di-A" data-val="A">A</div>
+        </div>
+
+        <div class="drop-targets" id="dropTargets">
+          <div class="drop-target" data-expect="P" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event,this)">
+            Symbole<br><small>Puissance</small>
+          </div>
+          <div class="drop-target" data-expect="W" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event,this)">
+            Unité<br><small>Puissance</small>
+          </div>
+          <div class="drop-target" data-expect="U" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event,this)">
+            Symbole<br><small>Tension</small>
+          </div>
+          <div class="drop-target" data-expect="V" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event,this)">
+            Unité<br><small>Tension</small>
+          </div>
+          <div class="drop-target" data-expect="I" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event,this)">
+            Symbole<br><small>Intensité</small>
+          </div>
+          <div class="drop-target" data-expect="A" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event,this)">
+            Unité<br><small>Intensité</small>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-secondary" onclick="checkDragDrop()">✅ Vérifier</button>
+          <button class="btn btn-ghost" onclick="resetDragDrop()">🔄 Recommencer</button>
+        </div>
+        <div id="dragResult" style="margin-top:12px;font-size:0.9rem;display:none;"></div>
+      </div>
+    </div>
+
+    <!-- EXO 2: CALCULS GUIDÉS -->
+    <div class="exo-section" id="ex2">
+      <div class="calc-block">
+        <h4 style="margin-bottom:12px;">🧮 Problème 1</h4>
+        <div class="calc-scenario">
+          🫖 Une bouilloire électrique fonctionne sous une tension de <b>220 V</b> et est traversée par un courant d'intensité <b>9 A</b>.<br>
+          Calcule sa puissance électrique.
+        </div>
+        <div class="calc-steps">
+          <div class="calc-step">
+            <label>Formule :</label>
+            <span style="font-size:1rem;color:var(--text2);">P = U × I</span>
+          </div>
+          <div class="calc-step">
+            <label>Application :</label>
+            <span style="color:var(--text2);">P = 220 ×</span>
+            <input type="number" class="calc-input" id="calc1a" placeholder="?">
+            <span class="calc-unit">A</span>
+          </div>
+          <div class="calc-step">
+            <label>Résultat P :</label>
+            <input type="number" class="calc-input" id="calc1b" placeholder="?">
+            <span class="calc-unit">W</span>
+            <button class="calc-check" onclick="checkCalc('calc1a',9,'calc1b',1980,'calc1res')">Vérifier</button>
+          </div>
+        </div>
+        <div id="calc1res" style="margin-top:12px;display:none;font-size:0.85rem;padding:10px;border-radius:8px;"></div>
+      </div>
+
+      <div class="calc-block">
+        <h4 style="margin-bottom:12px;">🧮 Problème 2</h4>
+        <div class="calc-scenario">
+          📺 Une télévision a une puissance de <b>120 W</b> et fonctionne sous une tension de <b>220 V</b>.<br>
+          Calcule l'intensité du courant qui la traverse.
+        </div>
+        <div class="calc-steps">
+          <div class="calc-step">
+            <label>Formule :</label>
+            <span style="font-size:1rem;color:var(--text2);">I = P ÷ U</span>
+          </div>
+          <div class="calc-step">
+            <label>Application :</label>
+            <span style="color:var(--text2);">I = 120 ÷</span>
+            <input type="number" class="calc-input" id="calc2a" placeholder="?">
+            <span class="calc-unit">V</span>
+          </div>
+          <div class="calc-step">
+            <label>Résultat I :</label>
+            <input type="number" class="calc-input" id="calc2b" placeholder="?" step="0.01">
+            <span class="calc-unit">A</span>
+            <button class="calc-check" onclick="checkCalc2()">Vérifier</button>
+          </div>
+        </div>
+        <div id="calc2res" style="margin-top:12px;display:none;font-size:0.85rem;padding:10px;border-radius:8px;"></div>
+      </div>
+
+      <div class="calc-block">
+        <h4 style="margin-bottom:12px;">🧮 Problème 3</h4>
+        <div class="calc-scenario">
+          💡 Une lampe a une puissance de <b>60 W</b>. Elle est traversée par un courant de <b>0,5 A</b>.<br>
+          Calcule la tension aux bornes de la lampe.
+        </div>
+        <div class="calc-steps">
+          <div class="calc-step">
+            <label>Formule :</label>
+            <span style="font-size:1rem;color:var(--text2);">U = P ÷ I</span>
+          </div>
+          <div class="calc-step">
+            <label>Application :</label>
+            <span style="color:var(--text2);">U = 60 ÷</span>
+            <input type="number" class="calc-input" id="calc3a" placeholder="?" step="0.1">
+            <span class="calc-unit">A</span>
+          </div>
+          <div class="calc-step">
+            <label>Résultat U :</label>
+            <input type="number" class="calc-input" id="calc3b" placeholder="?">
+            <span class="calc-unit">V</span>
+            <button class="calc-check" onclick="checkCalc3()">Vérifier</button>
+          </div>
+        </div>
+        <div id="calc3res" style="margin-top:12px;display:none;font-size:0.85rem;padding:10px;border-radius:8px;"></div>
+      </div>
+    </div>
+
+    <!-- EXO 3: MATCHING -->
+    <div class="exo-section" id="ex3">
+      <div class="card" style="margin-bottom:20px;">
+        <h4 style="margin-bottom:16px;">🔗 Association — Relie chaque appareil à sa puissance</h4>
+        <p style="color:var(--text2);font-size:0.85rem;margin-bottom:20px;">Clique sur un appareil, puis sur la puissance correspondante.</p>
+
+        <div class="match-zone">
+          <div class="match-col" id="matchLeft">
+            <div class="match-item" data-id="ml1" data-pair="1" onclick="selectMatch(this,'left')">🫖 Bouilloire</div>
+            <div class="match-item" data-id="ml2" data-pair="2" onclick="selectMatch(this,'left')">💡 Lampe LED</div>
+            <div class="match-item" data-id="ml3" data-pair="3" onclick="selectMatch(this,'left')">📺 Télévision</div>
+            <div class="match-item" data-id="ml4" data-pair="4" onclick="selectMatch(this,'left')">🔌 Chargeur mobile</div>
+          </div>
+          <div class="match-col" id="matchRight">
+            <div class="match-item" data-id="mr1" data-pair="3" onclick="selectMatch(this,'right')">150 W</div>
+            <div class="match-item" data-id="mr2" data-pair="1" onclick="selectMatch(this,'right')">2 000 W</div>
+            <div class="match-item" data-id="mr3" data-pair="4" onclick="selectMatch(this,'right')">20 W</div>
+            <div class="match-item" data-id="mr4" data-pair="2" onclick="selectMatch(this,'right')">9 W</div>
+          </div>
+        </div>
+
+        <div id="matchResult" style="margin-top:16px;display:none;font-size:0.9rem;padding:10px;border-radius:8px;"></div>
+        <button class="btn btn-ghost" style="margin-top:12px;" onclick="resetMatch()">🔄 Réinitialiser</button>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="goToScreen(5)">🏆 Défi Final →</button>
+      <button class="btn btn-ghost" onclick="goToScreen(3)">← Simulateur</button>
+    </div>
+  </div>
+</section>
+
+<!-- =================== SCREEN 5: DÉFI FINAL =================== -->
+<section class="screen" id="screen-5">
+  <div class="container section">
+    <div class="defi-header">
+      <div class="badge badge-physics" style="margin-bottom:12px;">🏆 Module 5</div>
+      <h2 class="sec-title">Défi <span>Final</span></h2>
+      <p class="sec-desc">10 questions. Chronomètre enclenché. Décroche ton badge !</p>
+    </div>
+
+    <!-- Quiz zone -->
+    <div id="quizZone">
+      <div class="defi-meta">
+        <div class="defi-badge">
+          <div class="db-val" id="quizTimer">60</div>
+          <div class="db-label">⏱ Secondes</div>
+        </div>
+        <div class="defi-badge">
+          <div class="db-val" id="quizQNum">1</div>
+          <div class="db-label">❓ Question</div>
+        </div>
+        <div class="defi-badge">
+          <div class="db-val" id="quizPoints">0</div>
+          <div class="db-label">⭐ Points</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="quizProgressBar" style="width:0%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text2);margin-top:4px;">
+          <span>Progression</span>
+          <span id="quizProgressText">0 / 10</span>
+        </div>
+      </div>
+
+      <div class="quiz-card" id="quizCard">
+        <div class="quiz-num" id="quizNumLabel">Question 1 / 10</div>
+        <div class="quiz-q" id="quizQuestion"></div>
+        <div class="quiz-opts" id="quizOpts"></div>
+        <div id="quizFeedback" style="margin-top:16px;padding:12px;border-radius:8px;display:none;font-size:0.9rem;"></div>
+        <div style="margin-top:16px;text-align:right;display:none;" id="quizNextBtn">
+          <button class="btn btn-secondary" onclick="nextQuizQ()">Suivant →</button>
+        </div>
+      </div>
+
+      <div id="quizNotStarted" style="text-align:center;">
+        <p style="color:var(--text2);margin-bottom:20px;">Prêt(e) à relever le défi ? Le chronomètre démarrera dès que tu cliques sur le bouton.</p>
+        <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.1rem;padding:16px 40px;">
+          🚀 Lancer le défi
+        </button>
+      </div>
+    </div>
+
+    <!-- Result zone -->
+    <div id="resultZone" style="display:none;">
+      <div class="result-screen">
+        <div class="result-badge-big" id="resultEmoji">🏆</div>
+        <div class="result-score" id="resultScore"></div>
+        <div class="result-msg" id="resultMsg"></div>
+        <div class="result-stars" id="resultStars"></div>
+
+        <div class="cert-wrapper" id="certWrapper" style="margin-bottom:24px;">
+          <div style="font-size:2rem;margin-bottom:12px;">🎓</div>
+          <div class="cert-title">Certificat de Réussite</div>
+          <div class="cert-subtitle">Physique-Chimie · 3ème Collège</div>
+          <div class="cert-formula">P = U × I</div>
+          <div class="cert-student">A maîtrisé le chapitre sur</div>
+          <div style="font-family:var(--font-head);font-size:1.1rem;color:var(--accent);margin:4px 0;">La Puissance Électrique</div>
+          <div class="cert-score" id="certScore"></div>
+          <div class="cert-date" id="certDate"></div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary" onclick="printCert()">🖨️ Imprimer le certificat</button>
+          <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Rejouer</button>
+          <button class="btn btn-ghost" onclick="goToScreen(0)">🏠 Accueil</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* =============================================
+   STATE
+   ============================================= */
+let currentScreen = 0;
+const totalScreens = 6;
+let globalScore = 0;
+let exoPoints = 0;
+let exoTotal = 0;
+
+/* =============================================
+   NAVIGATION
+   ============================================= */
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + (n === 0 ? 'home' : n)).classList.add('active');
+  currentScreen = n;
+  window.scrollTo(0,0);
+
+  const nav = document.getElementById('mainNav');
+  nav.style.display = n === 0 ? 'none' : 'flex';
+
+  updateNavDots();
+
+  if (n === 3) updateSim();
+}
+
+function updateNavDots() {
+  for (let i = 0; i < 6; i++) {
+    const dot = document.getElementById('nd' + i);
+    if (!dot) continue;
+    dot.className = 'nav-dot';
+    if (i < currentScreen) dot.classList.add('done');
+    else if (i === currentScreen) dot.classList.add('active');
+  }
+}
+
+/* =============================================
+   THEME
+   ============================================= */
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+}
+
+/* =============================================
+   TOAST
+   ============================================= */
+function showToast(msg, type = 'info', dur = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+/* =============================================
+   SCORE
+   ============================================= */
+function addScore(pts) {
+  globalScore += pts;
+  document.getElementById('navScore').textContent = globalScore;
+  saveScore();
+}
+
+function saveScore() {
+  try { localStorage.setItem('puissance_score', globalScore); } catch(e){}
+}
+
+function loadScore() {
+  try {
+    const s = localStorage.getItem('puissance_score');
+    if (s) {
+      globalScore = parseInt(s) || 0;
+      document.getElementById('navScore').textContent = globalScore;
+      showToast('✅ Progression chargée : ' + globalScore + ' pts', 'success');
+    } else {
+      showToast('Aucune progression sauvegardée', 'info');
+    }
+  } catch(e) { showToast('Aucune progression trouvée', 'info'); }
+}
+
+/* =============================================
+   HINT
+   ============================================= */
+function toggleHint(id) {
+  const h = document.getElementById(id);
+  h.classList.toggle('show');
+}
+
+/* =============================================
+   SCREEN 1 — SITUATION
+   ============================================= */
+const applianceData = {
+  bouilloire: { name:'🫖 Bouilloire électrique', U:'220', I:'9', P:'1 980', questions:[
+    { q:'Quelle est la puissance de la bouilloire ?', opts:['P = 2 200 W','P = 1 980 W','P = 880 W','P = 200 W'], correct:1, explain:'P = U × I = 220 × 9 = 1 980 W. La bouilloire consomme beaucoup d\'énergie pour chauffer rapidement l\'eau.' },
+    { q:'Que signifie la valeur "I = 9 A" ?', opts:['La tension est 9 volts','L\'intensité du courant est 9 ampères','La puissance est 9 watts','La durée d\'utilisation est 9 heures'], correct:1, explain:'I représente l\'intensité du courant électrique. 9 A signifie que 9 ampères circulent dans le circuit de la bouilloire.' }
+  ]},
+  lampe: { name:'💡 Lampe LED', U:'220', I:'0.05', P:'11', questions:[
+    { q:'Avec U = 220 V et I = 0,05 A, quelle est la puissance de la lampe ?', opts:['P = 11 W','P = 220,05 W','P = 44 W','P = 110 W'], correct:0, explain:'P = U × I = 220 × 0,05 = 11 W. La lampe LED est très économe en énergie !' },
+    { q:'Pourquoi la lampe LED consomme-t-elle peu ?', opts:['Parce qu\'elle est grande','Parce que I est très faible','Parce qu\'elle ne fonctionne pas','Parce que U est nul'], correct:1, explain:'L\'intensité I = 0,05 A est très faible. Donc P = U × I est petite. Les LED sont économiques !' }
+  ]},
+  chargeur: { name:'🔌 Chargeur de téléphone', U:'5', I:'3', P:'15', questions:[
+    { q:'Un chargeur USB délivre U = 5 V et I = 3 A. Quelle est sa puissance ?', opts:['P = 2 W','P = 8 W','P = 15 W','P = 53 W'], correct:2, explain:'P = U × I = 5 × 3 = 15 W. C\'est la puissance de charge rapide d\'un téléphone !' },
+    { q:'Que se passe-t-il si on augmente l\'intensité I ?', opts:['La puissance diminue','La puissance ne change pas','La puissance augmente','La tension augmente'], correct:2, explain:'Puisque P = U × I, si I augmente (et U reste fixe), la puissance P augmente aussi. C\'est la charge rapide !' }
+  ]},
+  tele: { name:'📺 Télévision', U:'220', I:'0.7', P:'154', questions:[
+    { q:'Avec U = 220 V et I = 0,7 A, quelle est la puissance de la TV ?', opts:['P = 154 W','P = 314 W','P = 22 W','P = 70 W'], correct:0, explain:'P = U × I = 220 × 0,7 = 154 W. Une télévision moderne consomme entre 80 et 200 W.' },
+    { q:'Si on éteint la TV, que vaut l\'intensité I ?', opts:['I = 220 A','I = 0,7 A','I = 0 A','I = 1 A'], correct:2, explain:'Quand l\'appareil est éteint, aucun courant ne circule. Donc I = 0 A et P = U × 0 = 0 W.' }
+  ]}
+};
+
+let situAnswered = 0;
+
+function selectAppliance(key) {
+  document.querySelectorAll('.appliance-card').forEach(c => c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+
+  const data = applianceData[key];
+  document.getElementById('situAppName').textContent = data.name;
+  document.getElementById('situU').textContent = data.U;
+  document.getElementById('situI').textContent = data.I;
+  document.getElementById('situP').textContent = data.P;
+
+  const panel = document.getElementById('situPanel');
+  panel.classList.add('show');
+
+  // Render questions
+  const container = document.getElementById('situQuestions');
+  container.innerHTML = '';
+  situAnswered = 0;
+
+  data.questions.forEach((qdata, qi) => {
+    const div = document.createElement('div');
+    div.className = 'situ-q';
+    div.id = 'sq' + qi;
+    let optsHtml = qdata.opts.map((o, oi) =>
+      `<div class="q-opt" onclick="checkSituQ(this,'sq${qi}',${oi === qdata.correct},\`${qdata.explain}\`)">${o}</div>`
+    ).join('');
+    div.innerHTML = `<div class="q-text">❓ ${qdata.q}</div><div class="q-options">${optsHtml}</div><div class="q-feedback" id="sqfb${qi}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function checkSituQ(el, blockId, isCorrect, explain) {
+  const block = document.getElementById(blockId);
+  const qi = blockId.replace('sq','');
+  const feedback = document.getElementById('sqfb' + qi);
+  if (block.querySelector('.q-opt.correct') || block.querySelector('.q-opt.wrong')) return;
+
+  block.querySelectorAll('.q-opt').forEach(o => o.classList.add('disabled'));
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  feedback.textContent = (isCorrect ? '✅ ' : '❌ ') + explain;
+  feedback.className = 'q-feedback show ' + (isCorrect ? 'good' : 'bad');
+
+  if (isCorrect) {
+    addScore(5);
+    showToast('✅ Bonne réponse ! +5 pts', 'success');
+  } else {
+    showToast('❌ Pas tout à fait...', 'error');
+  }
+}
+
+/* =============================================
+   SCREEN 2 — COURS
+   ============================================= */
+function switchCoursTab(idx, btn) {
+  document.querySelectorAll('.cours-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.cours-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ct' + idx).classList.add('active');
+}
+
+function flipCard(el) {
+  el.classList.toggle('flipped');
+}
+
+/* =============================================
+   SCREEN 3 — SIMULATEUR
+   ============================================= */
+function updateSim() {
+  const U = parseFloat(document.getElementById('simU').value);
+  const I = parseFloat(document.getElementById('simI').value);
+  const P = U * I;
+
+  document.getElementById('simUVal').textContent = U;
+  document.getElementById('simIVal').textContent = I.toFixed(1);
+  document.getElementById('simPDisplay').textContent = Math.round(P);
+  document.getElementById('simULabel').textContent = U;
+  document.getElementById('simILabel').textContent = I.toFixed(1);
+  document.getElementById('simPLabel').textContent = Math.round(P);
+
+  // Progress bar & color
+  const maxP = 8000;
+  const pct = Math.min(P / maxP * 100, 100);
+  const bar = document.getElementById('simPBar');
+  bar.style.width = pct + '%';
+
+  let color, status, desc, lampFilter;
+  if (P < 50) { color = '#45aaf2'; status = 'Très faible consommation'; desc = 'Très faible luminosité'; lampFilter = 'brightness(0.3)'; }
+  else if (P < 200) { color = '#2dd4bf'; status = 'Consommation économique'; desc = 'Faible luminosité'; lampFilter = 'brightness(0.6)'; }
+  else if (P < 1000) { color = '#f7b731'; status = 'Consommation <strong>modérée</strong>'; desc = 'Luminosité normale'; lampFilter = 'brightness(1)'; }
+  else if (P < 3000) { color = '#fd9644'; status = 'Consommation <strong>élevée</strong>'; desc = 'Forte luminosité ⚡'; lampFilter = 'brightness(1.3) saturate(1.5)'; }
+  else { color = '#fc5c65'; status = '⚠️ Consommation <strong>très élevée</strong>'; desc = '🔥 Surchauffe !'; lampFilter = 'brightness(1.5) saturate(2) hue-rotate(-10deg)'; }
+
+  bar.style.background = color;
+  document.getElementById('simDot').style.background = color;
+  document.getElementById('simStatus').innerHTML = status;
+  document.getElementById('simPDisplay').style.color = color;
+  document.getElementById('lampDesc').textContent = desc;
+  document.getElementById('lampEmoji').style.filter = lampFilter;
+
+  const glowSize = Math.min(P / 100, 60);
+  const glowOpacity = Math.min(P / 2000, 0.6);
+  document.getElementById('lampGlowBg').style.background = `rgba(247,183,49,${glowOpacity})`;
+  document.getElementById('lampGlowBg').style.width = (40 + glowSize) + 'px';
+  document.getElementById('lampGlowBg').style.height = (40 + glowSize) + 'px';
+  document.getElementById('lampGlowBg').style.inset = '-' + (glowSize/2) + 'px';
+
+  // Category highlight
+  for (let i = 0; i < 4; i++) document.getElementById('pc'+i).classList.remove('active');
+  if (P <= 15) document.getElementById('pc0').classList.add('active');
+  else if (P <= 200) document.getElementById('pc1').classList.add('active');
+  else if (P <= 65) document.getElementById('pc2').classList.add('active');
+  else document.getElementById('pc3').classList.add('active');
+
+  // Update bulb SVG
+  const opacity = Math.min(P / 500, 1);
+  const bulbGlow = document.getElementById('bulbGlow');
+  const bulbBolt = document.getElementById('bulbBolt');
+  if (bulbGlow) {
+    bulbGlow.setAttribute('opacity', (opacity * 0.8).toFixed(2));
+    bulbGlow.setAttribute('stroke', color);
+  }
+  if (bulbBolt) {
+    bulbBolt.setAttribute('opacity', (0.3 + opacity * 0.7).toFixed(2));
+    bulbBolt.setAttribute('stroke', color);
+  }
+  const bulbCircle = document.getElementById('bulbCircle');
+  if (bulbCircle) {
+    bulbCircle.setAttribute('fill', `rgba(${opacity > 0.5 ? '255,220,100' : '30,30,30'},${opacity * 0.4})`);
+  }
+}
+
+/* =============================================
+   SCREEN 4 — EXERCICES
+   ============================================= */
+function switchExoTab(idx, btn) {
+  document.querySelectorAll('.exo-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.exo-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ex' + idx).classList.add('active');
+}
+
+// QCM
+function checkQCM(el, blockId, isCorrect, explain) {
+  const block = document.getElementById(blockId);
+  if (block.querySelector('.qcm-opt.correct') || block.querySelector('.qcm-opt.wrong')) return;
+
+  block.querySelectorAll('.qcm-opt').forEach(o => o.classList.add('disabled'));
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  const fb = document.getElementById(blockId + '-explain');
+  fb.textContent = (isCorrect ? '✅ ' : '❌ ') + explain;
+  fb.className = 'qcm-explain show ' + (isCorrect ? 'correct' : 'wrong');
+
+  exoTotal++;
+  if (isCorrect) {
+    exoPoints++;
+    addScore(10);
+    showToast('✅ Correct ! +10 pts', 'success');
+  } else {
+    showToast('❌ Incorrect', 'error');
+  }
+  updateExoScore();
+}
+
+function updateExoScore() {
+  document.getElementById('exoScore').textContent = exoPoints * 10;
+  document.getElementById('exoPercent').textContent = exoTotal > 0 ? Math.round(exoPoints/exoTotal*100) : 0;
+}
+
+// Drag & drop
+let dragging = null;
+document.addEventListener('dragstart', e => {
+  if (e.target.classList.contains('drag-item')) {
+    dragging = e.target;
+    setTimeout(() => e.target.classList.add('dragging'), 0);
+  }
+});
+document.addEventListener('dragend', e => {
+  if (e.target.classList.contains('drag-item')) e.target.classList.remove('dragging');
+  dragging = null;
+});
+
+function handleDrop(e, target) {
+  e.preventDefault();
+  target.classList.remove('drag-over');
+  if (!dragging) return;
+  target.innerHTML = `<strong>${dragging.dataset.val}</strong>`;
+  target.dataset.filled = dragging.dataset.val;
+  target.classList.add('filled');
+  target.classList.remove('wrong-fill');
+}
+
+function checkDragDrop() {
+  const targets = document.querySelectorAll('.drop-target');
+  let ok = 0;
+  targets.forEach(t => {
+    if (t.dataset.filled === t.dataset.expect) {
+      ok++;
+      t.style.borderColor = 'var(--green)';
+    } else if (t.dataset.filled) {
+      t.style.borderColor = 'var(--red)';
+      t.classList.add('wrong-fill');
+    }
+  });
+  const result = document.getElementById('dragResult');
+  result.style.display = 'block';
+  result.style.background = ok === 6 ? 'rgba(45,212,191,0.1)' : 'rgba(252,92,101,0.1)';
+  result.style.borderLeft = '3px solid ' + (ok === 6 ? 'var(--green)' : 'var(--red)');
+  result.style.padding = '10px';
+  result.style.borderRadius = '0 8px 8px 0';
+  result.textContent = ok === 6 ? `🎉 Parfait ! Toutes les associations sont correctes ! +15 pts` : `${ok}/6 bonnes associations. Vérifie les cases rouges !`;
+  if (ok === 6) { addScore(15); showToast('🎉 Parfait ! +15 pts', 'success'); }
+  else { showToast(`${ok}/6 correctes`, 'error'); }
+  exoTotal++; if (ok === 6) exoPoints++; updateExoScore();
+}
+
+function resetDragDrop() {
+  document.querySelectorAll('.drop-target').forEach(t => {
+    t.innerHTML = t.getAttribute('data-label') || (t.querySelector('small') ? t.querySelector('small').outerHTML : '');
+    const exp = t.dataset.expect;
+    const labels = {P:'Symbole<br><small>Puissance</small>',W:'Unité<br><small>Puissance</small>',U:'Symbole<br><small>Tension</small>',V:'Unité<br><small>Tension</small>',I:'Symbole<br><small>Intensité</small>',A:'Unité<br><small>Intensité</small>'};
+    t.innerHTML = labels[exp] || exp;
+    delete t.dataset.filled;
+    t.style.borderColor = '';
+    t.classList.remove('filled','wrong-fill');
+  });
+  document.getElementById('dragResult').style.display = 'none';
+}
+
+// Calc 1
+function checkCalc(aId, aVal, bId, bVal, resId) {
+  const a = parseFloat(document.getElementById(aId).value);
+  const b = parseFloat(document.getElementById(bId).value);
+  const res = document.getElementById(resId);
+  res.style.display = 'block';
+  const aOk = Math.abs(a - aVal) < 0.5;
+  const bOk = Math.abs(b - bVal) < 10;
+  document.getElementById(aId).className = 'calc-input ' + (aOk ? 'correct' : 'wrong');
+  document.getElementById(bId).className = 'calc-input ' + (bOk ? 'correct' : 'wrong');
+  if (aOk && bOk) {
+    res.style.background = 'rgba(45,212,191,0.08)';
+    res.style.borderLeft = '3px solid var(--green)';
+    res.style.color = 'var(--green)';
+    res.textContent = '✅ Excellent ! P = 220 × 9 = 1 980 W. La bouilloire consomme presque 2 kW !';
+    addScore(15); showToast('✅ Calcul correct ! +15 pts', 'success');
+    exoPoints++; exoTotal++;
+  } else {
+    res.style.background = 'rgba(252,92,101,0.08)';
+    res.style.borderLeft = '3px solid var(--red)';
+    res.style.color = 'var(--red)';
+    res.textContent = '❌ Pas tout à fait. P = U × I = 220 × 9 = 1 980 W';
+    exoTotal++;
+  }
+  updateExoScore();
+}
+
+function checkCalc2() {
+  const a = parseFloat(document.getElementById('calc2a').value);
+  const b = parseFloat(document.getElementById('calc2b').value);
+  const res = document.getElementById('calc2res');
+  res.style.display = 'block';
+  const aOk = Math.abs(a - 220) < 1;
+  const bOk = Math.abs(b - 0.545) < 0.1;
+  document.getElementById('calc2a').className = 'calc-input ' + (aOk ? 'correct' : 'wrong');
+  document.getElementById('calc2b').className = 'calc-input ' + (bOk ? 'correct' : 'wrong');
+  if (aOk && bOk) {
+    res.style.cssText = 'display:block;background:rgba(45,212,191,0.08);border-left:3px solid var(--green);color:var(--green);border-radius:0 8px 8px 0;';
+    res.textContent = '✅ Parfait ! I = P ÷ U = 120 ÷ 220 ≈ 0,545 A';
+    addScore(15); showToast('✅ Calcul correct ! +15 pts', 'success');
+    exoPoints++; exoTotal++;
+  } else {
+    res.style.cssText = 'display:block;background:rgba(252,92,101,0.08);border-left:3px solid var(--red);color:var(--red);border-radius:0 8px 8px 0;';
+    res.textContent = '❌ Pas tout à fait. I = P ÷ U = 120 ÷ 220 ≈ 0,545 A';
+    exoTotal++;
+  }
+  updateExoScore();
+}
+
+function checkCalc3() {
+  const a = parseFloat(document.getElementById('calc3a').value);
+  const b = parseFloat(document.getElementById('calc3b').value);
+  const res = document.getElementById('calc3res');
+  res.style.display = 'block';
+  const aOk = Math.abs(a - 0.5) < 0.05;
+  const bOk = Math.abs(b - 120) < 5;
+  document.getElementById('calc3a').className = 'calc-input ' + (aOk ? 'correct' : 'wrong');
+  document.getElementById('calc3b').className = 'calc-input ' + (bOk ? 'correct' : 'wrong');
+  if (aOk && bOk) {
+    res.style.cssText = 'display:block;background:rgba(45,212,191,0.08);border-left:3px solid var(--green);color:var(--green);border-radius:0 8px 8px 0;';
+    res.textContent = '✅ Excellent ! U = P ÷ I = 60 ÷ 0,5 = 120 V';
+    addScore(15); showToast('✅ Calcul correct ! +15 pts', 'success');
+    exoPoints++; exoTotal++;
+  } else {
+    res.style.cssText = 'display:block;background:rgba(252,92,101,0.08);border-left:3px solid var(--red);color:var(--red);border-radius:0 8px 8px 0;';
+    res.textContent = '❌ Pas tout à fait. U = P ÷ I = 60 ÷ 0,5 = 120 V';
+    exoTotal++;
+  }
+  updateExoScore();
+}
+
+// Matching
+let matchSelected = {left: null, right: null};
+
+function selectMatch(el, side) {
+  if (el.classList.contains('matched')) return;
+
+  // Deselect same side
+  document.querySelectorAll('#match' + (side === 'left' ? 'Left' : 'Right') + ' .match-item.selected').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  matchSelected[side] = el;
+
+  // Remove wrong-match highlights
+  document.querySelectorAll('.match-item.wrong-match').forEach(m => m.classList.remove('wrong-match'));
+
+  if (matchSelected.left && matchSelected.right) {
+    if (matchSelected.left.dataset.pair === matchSelected.right.dataset.pair) {
+      matchSelected.left.classList.remove('selected'); matchSelected.left.classList.add('matched');
+      matchSelected.right.classList.remove('selected'); matchSelected.right.classList.add('matched');
+      addScore(10); showToast('✅ Bonne association ! +10 pts', 'success');
+
+      const all = document.querySelectorAll('.match-item.matched');
+      if (all.length === 8) {
+        const res = document.getElementById('matchResult');
+        res.style.display = 'block';
+        res.style.cssText = 'display:block;background:rgba(45,212,191,0.1);border-left:3px solid var(--green);color:var(--green);padding:10px;border-radius:0 8px 8px 0;font-size:0.9rem;';
+        res.textContent = '🎉 Félicitations ! Toutes les associations sont correctes !';
+        exoPoints++; exoTotal++; updateExoScore();
+      }
+    } else {
+      matchSelected.left.classList.add('wrong-match');
+      matchSelected.right.classList.add('wrong-match');
+      setTimeout(() => {
+        document.querySelectorAll('.match-item.wrong-match').forEach(m => { m.classList.remove('wrong-match','selected'); });
+      }, 800);
+      showToast('❌ Ce n\'est pas la bonne paire', 'error');
+    }
+    matchSelected = {left:null, right:null};
+  }
+}
+
+function resetMatch() {
+  document.querySelectorAll('.match-item').forEach(m => m.className = 'match-item');
+  document.getElementById('matchResult').style.display = 'none';
+  matchSelected = {left:null, right:null};
+}
+
+/* =============================================
+   SCREEN 5 — QUIZ FINAL
+   ============================================= */
+const quizQuestions = [
+  { q:'Quelle est la formule de la puissance électrique ?', opts:['P = U + I','P = U × I','P = U ÷ I','P = I ÷ U'], correct:1, explain:'P = U × I est la formule fondamentale. Puissance = Tension × Intensité.' },
+  { q:'L\'unité de la puissance électrique est :', opts:['Le Volt','L\'Ampère','Le Joule','Le Watt'], correct:3, explain:'La puissance s\'exprime en Watt (W), en l\'honneur de James Watt.' },
+  { q:'Une lampe a P = 100 W et U = 220 V. Quelle est l\'intensité I ?', opts:['I ≈ 0,45 A','I = 22 A','I = 100 A','I = 2,2 A'], correct:0, explain:'I = P ÷ U = 100 ÷ 220 ≈ 0,45 A.' },
+  { q:'Le symbole de la tension électrique est :', opts:['P','I','U','E'], correct:2, explain:'U est le symbole de la tension (différence de potentiel), mesurée en Volt.' },
+  { q:'La puissance P = 220 V × 5 A = ?', opts:['1 100 W','44 W','225 W','110 W'], correct:0, explain:'P = U × I = 220 × 5 = 1 100 W. Soit 1,1 kW.' },
+  { q:'Sur une plaque signalétique on lit : 220 V – 10 A. Quelle est la puissance ?', opts:['22 W','230 W','2 200 W','1 000 W'], correct:2, explain:'P = U × I = 220 × 10 = 2 200 W. La bouilloire ou le sèche-cheveux ont souvent cette puissance.' },
+  { q:'Quelle grandeur mesure l\'énergie consommée en kWh ?', opts:['La puissance P','L\'intensité I','La tension U','L\'énergie E'], correct:3, explain:'L\'énergie E = P × t se mesure en Joule ou kilowattheure (kWh) sur les compteurs électriques.' },
+  { q:'L\'ampèremètre mesure :', opts:['La tension U','La résistance R','L\'intensité I','La puissance P'], correct:2, explain:'L\'ampèremètre est branché en série dans le circuit pour mesurer l\'intensité du courant.' },
+  { q:'Si I double et U reste constant, que se passe-t-il avec P ?', opts:['P reste la même','P est divisée par 2','P double aussi','P est nulle'], correct:2, explain:'P = U × I. Si I double → P = U × 2I = 2×(U×I) = 2P. La puissance double !' },
+  { q:'1 kilowatt (kW) correspond à :', opts:['100 W','10 W','1 000 W','10 000 W'], correct:2, explain:'Le préfixe kilo signifie × 1 000. Donc 1 kW = 1 000 W.' }
+];
+
+let quizState = {
+  current: 0,
+  score: 0,
+  timer: null,
+  timeLeft: 60,
+  started: false,
+  answered: false
+};
+
+function startQuiz() {
+  quizState = { current:0, score:0, timer:null, timeLeft:60, started:true, answered:false };
+  document.getElementById('quizNotStarted').style.display = 'none';
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('resultZone').style.display = 'none';
+  document.getElementById('quizZone').style.display = 'block';
+
+  renderQuizQ();
+  startTimer();
+}
+
+function startTimer() {
+  quizState.timeLeft = 60;
+  quizState.timer = setInterval(() => {
+    quizState.timeLeft--;
+    document.getElementById('quizTimer').textContent = quizState.timeLeft;
+    if (quizState.timeLeft <= 10) document.getElementById('quizTimer').style.color = 'var(--red)';
+    if (quizState.timeLeft <= 0) {
+      clearInterval(quizState.timer);
+      if (!quizState.answered) {
+        showQuizFeedback(false, '⏱ Temps écoulé ! ' + quizQuestions[quizState.current].explain);
+        document.getElementById('quizNextBtn').style.display = 'block';
+        document.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+        quizState.answered = true;
+      }
+    }
+  }, 1000);
+}
+
+function renderQuizQ() {
+  const q = quizQuestions[quizState.current];
+  quizState.answered = false;
+  quizState.timeLeft = 60;
+  document.getElementById('quizTimer').style.color = '';
+
+  document.getElementById('quizNumLabel').textContent = `Question ${quizState.current + 1} / ${quizQuestions.length}`;
+  document.getElementById('quizQNum').textContent = quizState.current + 1;
+  document.getElementById('quizQuestion').textContent = q.q;
+  document.getElementById('quizFeedback').style.display = 'none';
+  document.getElementById('quizNextBtn').style.display = 'none';
+
+  const pct = (quizState.current / quizQuestions.length) * 100;
+  document.getElementById('quizProgressBar').style.width = pct + '%';
+  document.getElementById('quizProgressText').textContent = `${quizState.current} / ${quizQuestions.length}`;
+
+  const optsDiv = document.getElementById('quizOpts');
+  optsDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-opt';
+    div.textContent = opt;
+    div.onclick = () => answerQuiz(i, i === q.correct, q.explain, div);
+    optsDiv.appendChild(div);
+  });
+}
+
+function answerQuiz(idx, isCorrect, explain, el) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+  clearInterval(quizState.timer);
+
+  document.querySelectorAll('.quiz-opt').forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === quizQuestions[quizState.current].correct) o.classList.add('correct');
+  });
+  if (!isCorrect) el.classList.add('wrong');
+
+  if (isCorrect) {
+    quizState.score += 10;
+    document.getElementById('quizPoints').textContent = quizState.score;
+    showQuizFeedback(true, '✅ ' + explain);
+  } else {
+    showQuizFeedback(false, '❌ ' + explain);
+  }
+
+  document.getElementById('quizNextBtn').style.display = 'block';
+}
+
+function showQuizFeedback(ok, text) {
+  const fb = document.getElementById('quizFeedback');
+  fb.style.display = 'block';
+  fb.style.background = ok ? 'rgba(45,212,191,0.1)' : 'rgba(252,92,101,0.1)';
+  fb.style.borderLeft = '3px solid ' + (ok ? 'var(--green)' : 'var(--red)');
+  fb.style.color = ok ? 'var(--green)' : 'var(--red)';
+  fb.style.borderRadius = '0 8px 8px 0';
+  fb.textContent = text;
+}
+
+function nextQuizQ() {
+  quizState.current++;
+  if (quizState.current >= quizQuestions.length) {
+    showResults();
+  } else {
+    renderQuizQ();
+    startTimer();
+  }
+}
+
+function showResults() {
+  clearInterval(quizState.timer);
+  document.getElementById('quizZone').style.display = 'none';
+  document.getElementById('resultZone').style.display = 'block';
+
+  const score = quizState.score;
+  const max = quizQuestions.length * 10;
+  const pct = score / max;
+
+  addScore(score);
+
+  let emoji, msg, stars;
+  if (pct === 1) { emoji = '🏆'; msg = 'Parfait ! Tu es un expert de la puissance électrique !'; stars = '⭐⭐⭐'; }
+  else if (pct >= 0.7) { emoji = '🥇'; msg = 'Excellent travail ! Tu maîtrises très bien le sujet.'; stars = '⭐⭐⭐'; }
+  else if (pct >= 0.5) { emoji = '🥈'; msg = 'Bon travail ! Continue à réviser pour progresser.'; stars = '⭐⭐'; }
+  else { emoji = '📚'; msg = 'Continue tes efforts ! Relis le cours et réessaie.'; stars = '⭐'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultScore').textContent = score + ' / ' + max;
+  document.getElementById('resultMsg').textContent = msg;
+  document.getElementById('resultStars').textContent = stars;
+
+  document.getElementById('certScore').textContent = score + ' / ' + max + ' points';
+  document.getElementById('certDate').textContent = 'Date : ' + new Date().toLocaleDateString('fr-FR', { year:'numeric', month:'long', day:'numeric' });
+}
+
+function resetQuiz() {
+  document.getElementById('resultZone').style.display = 'none';
+  document.getElementById('quizZone').style.display = 'block';
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('quizNotStarted').style.display = 'block';
+  document.getElementById('quizTimer').style.color = '';
+  document.getElementById('quizPoints').textContent = '0';
+  document.getElementById('quizProgressBar').style.width = '0%';
+  quizState = { current:0, score:0, timer:null, timeLeft:60, started:false, answered:false };
+}
+
+function printCert() {
+  window.print();
+}
+
+/* =============================================
+   INIT
+   ============================================= */
+window.onload = function() {
+  updateSim();
+  loadScore();
+};
+</script>
+</body>
+</html>
