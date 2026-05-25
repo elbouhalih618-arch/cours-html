@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Énergie Électrique — 3ème Collège</title>
+<style>
+/* ===== VARIABLES & RESET ===== */
+:root {
+  --bg: #0a0e1a;
+  --bg2: #0f1628;
+  --card: rgba(255,255,255,0.04);
+  --card-border: rgba(255,255,255,0.09);
+  --primary: #00d4ff;
+  --primary2: #0099cc;
+  --accent: #ffd700;
+  --accent2: #ff6b35;
+  --green: #00ff88;
+  --purple: #a855f7;
+  --red: #ff4444;
+  --text: #e8f0fe;
+  --text2: #8899bb;
+  --glow: 0 0 20px rgba(0,212,255,0.3);
+  --glow2: 0 0 40px rgba(0,212,255,0.15);
+  --radius: 18px;
+  --font-head: 'Segoe UI', system-ui, sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-head);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* Animated background */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(0,212,255,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 80% 80%, rgba(168,85,247,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 60% 10%, rgba(255,215,0,0.04) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ===== HERO HEADER ===== */
+.hero{
+  position:relative;
+  text-align:center;
+  padding:60px 20px 40px;
+  z-index:1;
+}
+.hero-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--primary),var(--purple));
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:6px 18px;
+  border-radius:50px;
+  margin-bottom:20px;
+  animation:fadeDown .6s ease;
+}
+.hero h1{
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:900;
+  background:linear-gradient(135deg,#fff 0%,var(--primary) 50%,var(--accent) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1.1;
+  margin-bottom:12px;
+  animation:fadeDown .7s ease;
+}
+.hero p{
+  color:var(--text2);
+  font-size:1.05rem;
+  max-width:600px;
+  margin:0 auto 30px;
+  animation:fadeDown .8s ease;
+}
+/* Progress bar */
+.progress-wrap{
+  background:rgba(255,255,255,0.07);
+  border-radius:50px;
+  height:8px;
+  max-width:500px;
+  margin:0 auto 12px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+  border-radius:50px;
+  transition:width .6s ease;
+  box-shadow:0 0 10px var(--primary);
+  width:0%;
+}
+.progress-label{
+  font-size:.82rem;
+  color:var(--text2);
+  margin-bottom:30px;
+}
+/* Score bar */
+.score-bar{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+  animation:fadeDown 1s ease;
+}
+.score-item{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:12px;
+  padding:8px 20px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:.88rem;
+}
+.score-item .icon{font-size:1.1rem}
+.score-val{color:var(--accent);font-weight:700;font-size:1rem}
+
+/* ===== NAV TABS ===== */
+.nav-tabs{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  padding:0 20px 30px;
+  flex-wrap:wrap;
+  z-index:1;
+  position:relative;
+}
+.nav-tab{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  color:var(--text2);
+  padding:10px 20px;
+  border-radius:50px;
+  cursor:pointer;
+  font-size:.85rem;
+  font-weight:600;
+  transition:all .3s;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.nav-tab:hover,.nav-tab.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;
+  border-color:var(--primary);
+  box-shadow:var(--glow);
+  transform:translateY(-2px);
+}
+
+/* ===== SECTIONS ===== */
+.section{
+  display:none;
+  padding:20px;
+  max-width:1100px;
+  margin:0 auto;
+  z-index:1;
+  position:relative;
+  animation:fadeIn .5s ease;
+}
+.section.active{display:block}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius);
+  padding:28px;
+  margin-bottom:22px;
+  backdrop-filter:blur(10px);
+  transition:all .3s;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
+  opacity:.5;
+}
+.card:hover{
+  border-color:rgba(0,212,255,0.25);
+  box-shadow:var(--glow2);
+  transform:translateY(-2px);
+}
+.card-title{
+  font-size:1.2rem;
+  font-weight:800;
+  color:var(--primary);
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.card-title .icon{font-size:1.4rem}
+
+/* ===== FORMULA BOX ===== */
+.formula-box{
+  background:linear-gradient(135deg,rgba(0,212,255,0.08),rgba(168,85,247,0.08));
+  border:2px solid rgba(0,212,255,0.3);
+  border-radius:14px;
+  padding:20px;
+  text-align:center;
+  margin:16px 0;
+  position:relative;
+  overflow:hidden;
+}
+.formula-box::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(0,212,255,0.03),transparent);
+  pointer-events:none;
+}
+.formula{
+  font-size:1.8rem;
+  font-weight:900;
+  color:#fff;
+  letter-spacing:2px;
+  font-family:'Courier New',monospace;
+}
+.formula span{color:var(--accent)}
+.formula-sub{font-size:.82rem;color:var(--text2);margin-top:8px}
+
+/* ===== UNIT TABLE ===== */
+.unit-table{width:100%;border-collapse:collapse;margin:12px 0}
+.unit-table th,.unit-table td{
+  padding:10px 14px;
+  border:1px solid rgba(255,255,255,0.08);
+  text-align:left;
+  font-size:.88rem;
+}
+.unit-table th{background:rgba(0,212,255,0.12);color:var(--primary);font-weight:700}
+.unit-table tr:hover td{background:rgba(0,212,255,0.05)}
+
+/* ===== SLIDER LAB ===== */
+.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:600px){.lab-grid{grid-template-columns:1fr}}
+.lab-slider-wrap{margin:10px 0}
+.lab-slider-wrap label{
+  font-size:.82rem;
+  color:var(--text2);
+  font-weight:600;
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+.lab-slider-wrap label span{color:var(--accent);font-weight:700}
+input[type=range]{
+  width:100%;
+  appearance:none;
+  height:6px;
+  border-radius:50px;
+  background:rgba(255,255,255,0.12);
+  outline:none;
+  cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:var(--primary);
+  box-shadow:0 0 8px var(--primary);
+  cursor:pointer;
+}
+.lab-result{
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.25);
+  border-radius:12px;
+  padding:16px;
+  text-align:center;
+}
+.lab-result .big-val{
+  font-size:2rem;
+  font-weight:900;
+  color:var(--green);
+  font-family:'Courier New',monospace;
+}
+.lab-result .big-unit{color:var(--text2);font-size:.85rem;margin-top:4px}
+
+/* ===== ELECTRIC METER SVG ===== */
+.meter-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:20px;
+  background:rgba(0,0,0,.3);
+  border-radius:16px;
+  border:1px solid var(--card-border);
+}
+.meter-svg{width:200px;height:200px}
+.meter-display{
+  background:#0a1a00;
+  border:2px solid #00ff88;
+  border-radius:8px;
+  padding:10px 20px;
+  font-family:'Courier New',monospace;
+  font-size:1.4rem;
+  color:#00ff88;
+  letter-spacing:3px;
+  text-shadow:0 0 10px #00ff88;
+}
+.meter-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.btn{
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:10px 22px;
+  font-size:.88rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .3s;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.btn.accent{background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.btn.green{background:linear-gradient(135deg,var(--green),#00cc66);color:#000}
+.btn.red{background:linear-gradient(135deg,var(--red),#cc2222)}
+.btn.purple{background:linear-gradient(135deg,var(--purple),#7722cc)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ===== QUIZ ===== */
+.quiz-q{
+  font-size:1rem;
+  font-weight:600;
+  margin-bottom:14px;
+  line-height:1.5;
+}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;
+  padding:12px 16px;
+  cursor:pointer;
+  transition:all .25s;
+  font-size:.88rem;
+}
+.quiz-opt:hover{border-color:var(--primary);background:rgba(0,212,255,0.08)}
+.quiz-opt.correct{background:rgba(0,255,136,0.15);border-color:var(--green);color:var(--green)}
+.quiz-opt.wrong{background:rgba(255,68,68,0.15);border-color:var(--red);color:var(--red)}
+.quiz-opt:disabled{cursor:not-allowed}
+.quiz-feedback{
+  margin-top:12px;
+  padding:12px 16px;
+  border-radius:10px;
+  font-size:.88rem;
+  font-weight:600;
+  display:none;
+}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:rgba(0,255,136,0.1);border:1px solid var(--green);color:var(--green)}
+.quiz-feedback.ko{background:rgba(255,68,68,0.1);border:1px solid var(--red);color:var(--red)}
+
+/* ===== DRAG & DROP ===== */
+.drag-zone{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  min-height:60px;
+  padding:14px;
+  background:rgba(255,255,255,.03);
+  border:2px dashed rgba(255,255,255,.15);
+  border-radius:12px;
+  margin:8px 0;
+}
+.drag-item{
+  background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(168,85,247,0.15));
+  border:1px solid rgba(0,212,255,0.3);
+  border-radius:8px;
+  padding:8px 14px;
+  font-size:.85rem;
+  font-weight:600;
+  cursor:grab;
+  user-select:none;
+  transition:all .2s;
+}
+.drag-item:hover{transform:scale(1.05);box-shadow:var(--glow)}
+.drag-item.dragging{opacity:.4}
+.drop-target{
+  background:rgba(255,255,255,.03);
+  border:2px dashed rgba(255,255,255,.2);
+  border-radius:10px;
+  min-height:46px;
+  padding:8px 12px;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  transition:all .2s;
+}
+.drop-target.over{border-color:var(--primary);background:rgba(0,212,255,0.08)}
+.drop-target.correct-drop{border-color:var(--green);background:rgba(0,255,136,.08)}
+.drop-target.wrong-drop{border-color:var(--red);background:rgba(255,68,68,.08)}
+
+/* ===== MATCHING ===== */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.match-grid{grid-template-columns:1fr}}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-item{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:.85rem;
+  cursor:pointer;
+  transition:all .25s;
+  text-align:center;
+}
+.match-item:hover{border-color:var(--primary);background:rgba(0,212,255,0.08)}
+.match-item.selected{border-color:var(--accent);background:rgba(255,215,0,0.1);color:var(--accent)}
+.match-item.matched-ok{border-color:var(--green);background:rgba(0,255,136,.1);color:var(--green);pointer-events:none}
+.match-item.matched-ko{border-color:var(--red);background:rgba(255,68,68,.1);color:var(--red)}
+
+/* ===== FILL-IN ===== */
+.fill-input{
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:8px;
+  color:var(--text);
+  font-size:.95rem;
+  padding:8px 12px;
+  width:100px;
+  text-align:center;
+  outline:none;
+  transition:border-color .2s;
+}
+.fill-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,212,255,.15)}
+.fill-input.ok{border-color:var(--green);background:rgba(0,255,136,.1)}
+.fill-input.ko{border-color:var(--red);background:rgba(255,68,68,.1)}
+
+/* ===== BADGE POPUP ===== */
+.badge-popup{
+  position:fixed;
+  top:80px;right:20px;
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  border:1px solid var(--accent);
+  border-radius:14px;
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 0 30px rgba(255,215,0,0.3);
+  z-index:1000;
+  transform:translateX(200px);
+  opacity:0;
+  transition:all .5s cubic-bezier(.34,1.56,.64,1);
+  max-width:280px;
+}
+.badge-popup.show{transform:translateX(0);opacity:1}
+.badge-icon{font-size:2rem}
+.badge-text{font-size:.82rem}
+.badge-title{font-weight:700;color:var(--accent)}
+
+/* ===== TIMER ===== */
+.timer-display{
+  font-family:'Courier New',monospace;
+  font-size:2rem;
+  font-weight:900;
+  color:var(--accent);
+  text-shadow:0 0 10px var(--accent);
+  text-align:center;
+}
+.timer-display.danger{color:var(--red);text-shadow:0 0 10px var(--red);animation:pulse .5s infinite}
+
+/* ===== MIND MAP ===== */
+.mindmap{
+  position:relative;
+  height:380px;
+  background:rgba(0,0,0,.2);
+  border-radius:16px;
+  overflow:hidden;
+}
+.mindmap svg{width:100%;height:100%}
+.mm-node{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(168,85,247,0.15));
+  border:1.5px solid rgba(0,212,255,0.4);
+  border-radius:12px;
+  padding:8px 14px;
+  font-size:.78rem;
+  font-weight:700;
+  text-align:center;
+  cursor:pointer;
+  transition:all .3s;
+  max-width:120px;
+}
+.mm-node:hover,.mm-node.active{
+  background:rgba(0,212,255,0.25);
+  box-shadow:var(--glow);
+  transform:translate(-50%,-50%) scale(1.05);
+}
+.mm-node.center{
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#000;
+  font-size:.9rem;
+  padding:12px 18px;
+  border-color:var(--primary);
+}
+.mm-tooltip{
+  position:absolute;
+  background:rgba(10,14,26,.95);
+  border:1px solid var(--primary);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:.78rem;
+  max-width:200px;
+  pointer-events:none;
+  display:none;
+  z-index:10;
+}
+
+/* ===== ESCAPE GAME ===== */
+.escape-step{display:none}
+.escape-step.active{display:block}
+.step-indicator{
+  display:flex;
+  gap:8px;
+  margin-bottom:16px;
+  justify-content:center;
+}
+.step-dot{
+  width:12px;height:12px;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  transition:all .3s;
+}
+.step-dot.active{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.step-dot.done{background:var(--green);box-shadow:0 0 6px var(--green)}
+.escape-panel{
+  background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(168,85,247,0.08));
+  border:1px solid rgba(255,107,53,0.25);
+  border-radius:14px;
+  padding:20px;
+}
+.calc-input{
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:8px;
+  color:var(--text);
+  font-size:1rem;
+  padding:8px 14px;
+  width:120px;
+  text-align:center;
+  outline:none;
+}
+.calc-input:focus{border-color:var(--accent)}
+
+/* ===== ERROR HUNT ===== */
+.error-calc{
+  font-family:'Courier New',monospace;
+  font-size:.95rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:14px;
+  line-height:2;
+  cursor:pointer;
+  transition:border-color .2s;
+}
+.error-part{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:5px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.error-part:hover{background:rgba(255,215,0,0.2)}
+.error-part.found{background:rgba(255,68,68,0.2);color:var(--red)}
+.error-part.correct-part{background:rgba(0,255,136,0.2);color:var(--green)}
+
+/* ===== BILL SIMULATION ===== */
+.bill{
+  background:linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  padding:20px;
+}
+.bill-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:.88rem;
+}
+.bill-row:last-child{border-bottom:none}
+.bill-total{
+  font-size:1.2rem;
+  font-weight:900;
+  color:var(--accent);
+}
+.bill-label{color:var(--text2)}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 10px rgba(0,212,255,.3)}50%{box-shadow:0 0 25px rgba(0,212,255,.6)}}
+@keyframes bounce-in{0%{transform:scale(0)}70%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+.float-anim{animation:float 3s ease-in-out infinite}
+.glow-anim{animation:glow-pulse 2s ease-in-out infinite}
+.bounce-in{animation:bounce-in .5s ease forwards}
+
+/* Grid helpers */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:600px){.grid3{grid-template-columns:1fr 1fr}}
+
+/* Tags */
+.tag{
+  display:inline-block;
+  background:rgba(0,212,255,0.12);
+  border:1px solid rgba(0,212,255,0.3);
+  color:var(--primary);
+  font-size:.72rem;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:50px;
+  margin:3px 2px;
+}
+.tag.accent{background:rgba(255,215,0,.12);border-color:rgba(255,215,0,.3);color:var(--accent)}
+.tag.green{background:rgba(0,255,136,.12);border-color:rgba(0,255,136,.3);color:var(--green)}
+.tag.purple{background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:var(--purple)}
+
+/* Info box */
+.info-box{
+  background:rgba(0,212,255,0.06);
+  border-left:3px solid var(--primary);
+  border-radius:0 10px 10px 0;
+  padding:12px 16px;
+  margin:10px 0;
+  font-size:.88rem;
+  line-height:1.6;
+}
+.info-box.warning{background:rgba(255,215,0,.06);border-color:var(--accent)}
+.info-box.success{background:rgba(0,255,136,.06);border-color:var(--green)}
+
+/* Separator */
+.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.2),transparent);margin:20px 0}
+
+/* Section header */
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:24px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.section-header .icon{
+  width:48px;height:48px;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.4rem;
+  flex-shrink:0;
+}
+.section-header h2{
+  font-size:1.4rem;
+  font-weight:800;
+  color:#fff;
+}
+.section-header p{color:var(--text2);font-size:.85rem;margin-top:3px}
+
+/* Tooltip */
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;
+  bottom:calc(100% + 6px);
+  left:50%;
+  transform:translateX(-50%);
+  background:#1a1a2e;
+  border:1px solid var(--primary);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:.75rem;
+  white-space:nowrap;
+  z-index:100;
+  pointer-events:none;
+  color:var(--text);
+}
+
+/* Responsive tweaks */
+@media(max-width:480px){
+  .card{padding:18px}
+  .formula{font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== BADGE POPUP ===== -->
+<div class="badge-popup" id="badgePopup">
+  <div class="badge-icon" id="badgeIcon">🏆</div>
+  <div class="badge-text">
+    <div class="badge-title" id="badgeTitle">Badge obtenu !</div>
+    <div id="badgeDesc" style="color:var(--text2)">Description</div>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-badge">⚡ Sciences Physiques · 3ème Collège</div>
+  <h1>L'Énergie Électrique</h1>
+  <p>Une plateforme interactive pour maîtriser l'énergie électrique : formules, simulations, défis et escape game pédagogique.</p>
+  <div class="score-bar">
+    <div class="score-item"><span class="icon">⭐</span>Score <span class="score-val" id="scoreVal">0</span> pts</div>
+    <div class="score-item"><span class="icon">🏅</span>Badges <span class="score-val" id="badgeCount">0</span></div>
+    <div class="score-item"><span class="icon">🔥</span>Série <span class="score-val" id="streakVal">0</span></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">Commence ton parcours !</div>
+</div>
+
+<!-- ===== NAV TABS ===== -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('s1',this)">⚡ I. Énergie & Puissance</button>
+  <button class="nav-tab" onclick="showSection('s2',this)">🔥 II. Chauffage</button>
+  <button class="nav-tab" onclick="showSection('s3',this)">🏠 III. Installation</button>
+  <button class="nav-tab" onclick="showSection('s4',this)">🧪 Labo Virtuel</button>
+  <button class="nav-tab" onclick="showSection('s5',this)">🎮 Escape Game</button>
+  <button class="nav-tab" onclick="showSection('s6',this)">🗺️ Carte Mentale</button>
+  <button class="nav-tab" onclick="showSection('s7',this)">🏆 Défi Final</button>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECTION 1 : ÉNERGIE & PUISSANCE -->
+<!-- ================================================================ -->
+<div class="section active" id="s1">
+  <div class="section-header">
+    <div class="icon">⚡</div>
+    <div>
+      <h2>I. L'énergie consommée par un appareil électrique</h2>
+      <p>Découvre la relation fondamentale entre énergie, puissance et durée.</p>
+    </div>
+  </div>
+
+  <!-- DÉFINITION -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📖</span> Définition</div>
+    <p style="line-height:1.7;font-size:.92rem">
+      L'<strong style="color:var(--primary)">énergie électrique</strong> consommée par un appareil est la quantité d'énergie que cet appareil transforme en d'autres formes d'énergie (chaleur, lumière, mouvement, son…) pendant son fonctionnement.
+    </p>
+    <div class="info-box" style="margin-top:12px">
+      💡 Plus un appareil est <strong>puissant</strong> et fonctionne <strong>longtemps</strong>, plus il consomme d'énergie électrique.
+    </div>
+  </div>
+
+  <!-- ACTIVITÉ EXPÉRIMENTALE ANIMÉE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔬</span> Activité expérimentale interactive</div>
+    <p style="font-size:.88rem;color:var(--text2);margin-bottom:16px">Fais fonctionner différents appareils et observe la consommation d'énergie !</p>
+    
+    <div class="grid2">
+      <div>
+        <p style="font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:10px">Choisir un appareil :</p>
+        <div style="display:flex;flex-direction:column;gap:8px" id="appChoices">
+          <button class="quiz-opt" onclick="selectAppareil(this,100,'Ampoule LED')" data-p="100">💡 Ampoule LED — 100 W</button>
+          <button class="quiz-opt" onclick="selectAppareil(this,1000,'Radiateur')" data-p="1000">🔥 Radiateur — 1000 W</button>
+          <button class="quiz-opt" onclick="selectAppareil(this,2000,'Fer à repasser')" data-p="2000">👔 Fer à repasser — 2000 W</button>
+          <button class="quiz-opt" onclick="selectAppareil(this,500,'Réfrigérateur')" data-p="500">🧊 Réfrigérateur — 500 W</button>
+        </div>
+      </div>
+      <div>
+        <div class="lab-slider-wrap">
+          <label>Durée de fonctionnement <span id="duree1Lbl">30</span> min</label>
+          <input type="range" min="1" max="120" value="30" id="duree1Sl" oninput="updateExp1()">
+        </div>
+        <div class="lab-result" style="margin-top:14px">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:6px">Énergie consommée</div>
+          <div class="big-val" id="exp1E">—</div>
+          <div class="big-unit" id="exp1Unit">Choisissez un appareil</div>
+        </div>
+        <div style="margin-top:10px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;font-size:.78rem;color:var(--text2)" id="exp1Detail">Sélectionnez un appareil pour commencer l'observation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCLUSION & FORMULE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">✅</span> Observation & Conclusion</div>
+    <p style="font-size:.88rem;color:var(--text2);margin-bottom:14px">
+      L'expérience montre que l'énergie consommée est proportionnelle à la <strong style="color:var(--primary)">puissance</strong> de l'appareil et à la <strong style="color:var(--primary)">durée</strong> de fonctionnement.
+    </p>
+    <div class="formula-box glow-anim">
+      <div class="formula"><span>E</span> = <span>P</span> × <span>t</span></div>
+      <div class="formula-sub">Énergie (J) = Puissance (W) × Durée (s)</div>
+    </div>
+    <div class="grid3" style="margin-top:16px">
+      <div class="lab-result" style="text-align:center;padding:14px">
+        <div style="font-size:1.4rem;margin-bottom:4px">⚡</div>
+        <div style="font-weight:700;color:var(--primary);font-size:.88rem">E — Énergie</div>
+        <div style="color:var(--text2);font-size:.78rem">Joule (J)</div>
+      </div>
+      <div class="lab-result" style="text-align:center;padding:14px;background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.25)">
+        <div style="font-size:1.4rem;margin-bottom:4px">💪</div>
+        <div style="font-weight:700;color:var(--accent);font-size:.88rem">P — Puissance</div>
+        <div style="color:var(--text2);font-size:.78rem">Watt (W)</div>
+      </div>
+      <div class="lab-result" style="text-align:center;padding:14px;background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.25)">
+        <div style="font-size:1.4rem;margin-bottom:4px">⏱️</div>
+        <div style="font-weight:700;color:var(--purple);font-size:.88rem">t — Durée</div>
+        <div style="color:var(--text2);font-size:.78rem">Seconde (s)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNITÉS -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📐</span> Unités de l'énergie électrique</div>
+    <table class="unit-table">
+      <thead><tr><th>Unité</th><th>Symbole</th><th>Équivalence</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td>Joule</td><td><strong style="color:var(--primary)">J</strong></td><td>—</td><td>Unité SI (légale)</td></tr>
+        <tr><td>Kilojoule</td><td><strong style="color:var(--primary)">kJ</strong></td><td>1 kJ = 1 000 J</td><td>Énergies moyennes</td></tr>
+        <tr><td>Watt-heure</td><td><strong style="color:var(--accent)">Wh</strong></td><td>1 Wh = 3 600 J</td><td>Appareils domestiques</td></tr>
+        <tr><td>Kilowatt-heure</td><td><strong style="color:var(--accent)">kWh</strong></td><td>1 kWh = 3 600 000 J</td><td>Factures électriques</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box warning">
+      ⚠️ <strong>Attention :</strong> Dans la formule E = P × t, la durée <em>t</em> doit être en <strong>secondes (s)</strong> pour obtenir E en Joules. Pour obtenir E en Wh, utiliser t en <strong>heures (h)</strong>.
+    </div>
+  </div>
+
+  <!-- PUZZLE FORMULE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🧩</span> Puzzle scientifique — Reconstitue la formule</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:14px">Glisse les éléments dans le bon ordre pour reconstituer la relation fondamentale.</p>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="font-size:.85rem;color:var(--text2)">Éléments disponibles :</div>
+      <div id="puzzlePieces" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+    <div style="font-size:.85rem;color:var(--text2);margin-bottom:8px">Ta formule :</div>
+    <div id="puzzleSlots" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:50px;background:rgba(255,255,255,.03);border:2px dashed rgba(255,255,255,.15);border-radius:12px;padding:10px"></div>
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn green" onclick="checkPuzzle()">✅ Vérifier</button>
+      <button class="btn" style="background:rgba(255,255,255,.07)" onclick="resetPuzzle()">🔄 Recommencer</button>
+    </div>
+    <div class="quiz-feedback" id="puzzleFb"></div>
+  </div>
+
+  <!-- QCM UNITÉS -->
+  <div class="card">
+    <div class="card-title"><span class="icon">❓</span> Quiz — Les unités</div>
+    <div id="quiz1"></div>
+    <button class="btn" style="margin-top:12px" onclick="loadQuiz1()">🔄 Nouvelle question</button>
+  </div>
+
+  <!-- EXERCICE COMPLETER -->
+  <div class="card">
+    <div class="card-title"><span class="icon">✏️</span> Complète les calculs</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:14px">Applique la formule E = P × t pour trouver les valeurs manquantes.</p>
+    <div id="fillEx1"></div>
+    <button class="btn green" onclick="checkFill1()" style="margin-top:12px">✅ Vérifier</button>
+    <button class="btn" style="margin-top:12px;background:rgba(255,255,255,.07)" onclick="loadFill1()">🔄 Nouveau</button>
+    <div class="quiz-feedback" id="fillFb1"></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECTION 2 : ÉNERGIE DE CHAUFFAGE -->
+<!-- ================================================================ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="icon">🔥</div>
+    <div>
+      <h2>II. L'énergie consommée par un appareil de chauffage</h2>
+      <p>Relation entre résistance, tension, intensité et énergie.</p>
+    </div>
+  </div>
+
+  <!-- PUISSANCE ÉLECTRIQUE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">⚡</span> Puissance d'un appareil de chauffage</div>
+    <p style="font-size:.88rem;line-height:1.7;margin-bottom:14px">
+      Pour un appareil de chauffage alimenté sous une tension <strong style="color:var(--accent)">U</strong> et parcouru par un courant d'intensité <strong style="color:var(--primary)">I</strong>, la puissance électrique consommée est :
+    </p>
+    <div class="formula-box">
+      <div class="formula"><span>P</span> = <span>U</span> × <span>I</span></div>
+      <div class="formula-sub">Puissance (W) = Tension (V) × Intensité (A)</div>
+    </div>
+    <div class="info-box">
+      🔌 Cette formule est la <strong>loi de la puissance électrique</strong>. Elle s'applique à tout récepteur électrique.
+    </div>
+  </div>
+
+  <!-- ÉNERGIE CHAUFFAGE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> Énergie consommée — Formule étendue</div>
+    <p style="font-size:.88rem;color:var(--text2);margin-bottom:14px">
+      En combinant E = P × t et P = U × I, on obtient :
+    </p>
+    <div class="formula-box glow-anim">
+      <div class="formula"><span>E</span> = <span>U</span> × <span>I</span> × <span>t</span></div>
+      <div class="formula-sub">Énergie (J) = Tension (V) × Intensité (A) × Durée (s)</div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <div class="tag">U en Volts (V)</div>
+      <div class="tag">I en Ampères (A)</div>
+      <div class="tag accent">t en secondes (s)</div>
+      <div class="tag green">E en Joules (J)</div>
+    </div>
+  </div>
+
+  <!-- LOI D'OHM -->
+  <div class="card">
+    <div class="card-title"><span class="icon">Ω</span> Loi d'Ohm — Résistance électrique</div>
+    <p style="font-size:.88rem;line-height:1.7;margin-bottom:14px">
+      La résistance électrique <strong style="color:var(--purple)">R</strong> d'un conducteur est le rapport de la tension à ses bornes sur l'intensité du courant :
+    </p>
+    <div class="formula-box" style="border-color:rgba(168,85,247,.4);background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(0,212,255,.08))">
+      <div class="formula"><span style="color:var(--primary)">U</span> = <span style="color:var(--purple)">R</span> × <span style="color:var(--accent)">I</span></div>
+      <div class="formula-sub">Tension (V) = Résistance (Ω) × Intensité (A)</div>
+    </div>
+    <div class="sep"></div>
+    <p style="font-size:.88rem;color:var(--text2);margin-bottom:12px">
+      En substituant U = R × I dans E = U × I × t :
+    </p>
+    <div class="formula-box glow-anim">
+      <div class="formula"><span>E</span> = <span>R</span> × <span>I²</span> × <span>t</span></div>
+      <div class="formula-sub">Énergie (J) = Résistance (Ω) × Intensité² (A²) × Durée (s)</div>
+    </div>
+    <div class="info-box success" style="margin-top:14px">
+      ✅ Cette formule est très utile quand on connaît la résistance R et l'intensité I plutôt que la tension U.
+    </div>
+  </div>
+
+  <!-- SIMULATEUR CHAUFFAGE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🧪</span> Simulateur — Appareil de chauffage</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:16px">Modifie les paramètres et observe l'évolution de l'énergie consommée en temps réel.</p>
+    
+    <div class="lab-grid">
+      <div>
+        <div class="lab-slider-wrap">
+          <label>Résistance R <span id="rLbl">20</span> Ω</label>
+          <input type="range" min="1" max="200" value="20" id="rSl" oninput="updateHeating()">
+        </div>
+        <div class="lab-slider-wrap">
+          <label>Intensité I <span id="iLbl">5</span> A</label>
+          <input type="range" min="1" max="20" value="5" id="iSl" oninput="updateHeating()">
+        </div>
+        <div class="lab-slider-wrap">
+          <label>Durée t <span id="tLbl">60</span> min</label>
+          <input type="range" min="1" max="480" value="60" id="tSl" oninput="updateHeating()">
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="lab-result">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Tension U = R × I</div>
+          <div class="big-val" id="heatU">100 V</div>
+        </div>
+        <div class="lab-result" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.3)">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Puissance P = U × I</div>
+          <div class="big-val" style="color:var(--accent)" id="heatP">500 W</div>
+        </div>
+        <div class="lab-result" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.3)">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Énergie E = R × I² × t</div>
+          <div class="big-val" style="color:var(--purple)" id="heatE">1800 kJ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG schéma circuit -->
+    <div style="margin-top:16px;text-align:center">
+      <svg viewBox="0 0 400 160" style="max-width:400px;width:100%" xmlns="http://www.w3.org/2000/svg">
+        <!-- Fils -->
+        <line x1="40" y1="80" x2="100" y2="80" stroke="#00d4ff" stroke-width="2.5"/>
+        <line x1="300" y1="80" x2="360" y2="80" stroke="#00d4ff" stroke-width="2.5"/>
+        <line x1="360" y1="80" x2="360" y2="130" stroke="#00d4ff" stroke-width="2.5"/>
+        <line x1="40" y1="80" x2="40" y2="130" stroke="#00d4ff" stroke-width="2.5"/>
+        <line x1="40" y1="130" x2="360" y2="130" stroke="#00d4ff" stroke-width="2.5"/>
+        <!-- Générateur -->
+        <rect x="20" y="60" width="20" height="40" rx="3" fill="#1a1a3a" stroke="#a855f7" stroke-width="2"/>
+        <line x1="30" y1="65" x2="30" y2="75" stroke="#a855f7" stroke-width="2"/>
+        <line x1="30" y1="85" x2="30" y2="95" stroke="#a855f7" stroke-width="2"/>
+        <text x="10" y="55" fill="#a855f7" font-size="9" font-family="sans-serif">Générateur</text>
+        <text x="12" y="110" fill="#a855f7" font-size="9" font-family="sans-serif">U = <tspan id="svgU">100</tspan>V</text>
+        <!-- Résistance (chauffage) -->
+        <rect x="100" y="65" width="200" height="30" rx="5" fill="#1a1a3a" stroke="#ffd700" stroke-width="2"/>
+        <text x="175" y="84" fill="#ffd700" font-size="10" font-family="sans-serif" text-anchor="middle">R = <tspan id="svgR">20</tspan> Ω</text>
+        <text x="175" y="115" fill="#ffd700" font-size="9" font-family="sans-serif" text-anchor="middle">Résistance chauffante</text>
+        <!-- Ampèremètre -->
+        <circle cx="355" cy="80" r="12" fill="#1a1a3a" stroke="#00ff88" stroke-width="2"/>
+        <text x="355" y="84" fill="#00ff88" font-size="10" text-anchor="middle" font-family="sans-serif">A</text>
+        <!-- Flèches courant -->
+        <text x="200" y="58" fill="#00d4ff" font-size="9" text-anchor="middle" font-family="sans-serif">I = <tspan id="svgI">5</tspan> A →</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- MATCHING FORMULES -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔗</span> Associe formule ↔ signification</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:14px">Clique sur une formule puis sur sa signification pour les associer.</p>
+    <div class="match-grid" id="matchFormulas">
+      <div class="match-col" id="mLeft">
+        <div class="match-item" onclick="matchSel(this,'P=UI')" data-key="P=UI">P = U × I</div>
+        <div class="match-item" onclick="matchSel(this,'E=Pt')" data-key="E=Pt">E = P × t</div>
+        <div class="match-item" onclick="matchSel(this,'U=RI')" data-key="U=RI">U = R × I</div>
+        <div class="match-item" onclick="matchSel(this,'E=RIt')" data-key="E=RIt">E = R × I² × t</div>
+      </div>
+      <div class="match-col" id="mRight">
+        <div class="match-item" onclick="matchSel(this,'E=RIt')" data-key="E=RIt">Énergie avec résistance</div>
+        <div class="match-item" onclick="matchSel(this,'U=RI')" data-key="U=RI">Loi d'Ohm</div>
+        <div class="match-item" onclick="matchSel(this,'P=UI')" data-key="P=UI">Puissance électrique</div>
+        <div class="match-item" onclick="matchSel(this,'E=Pt')" data-key="E=Pt">Énergie consommée</div>
+      </div>
+    </div>
+    <div class="quiz-feedback" id="matchFb"></div>
+  </div>
+
+  <!-- DÉTECTION D'ERREURS -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔍</span> Détective scientifique — Trouve l'erreur !</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:14px">Un élève a fait un calcul. Clique sur la partie qui contient l'erreur.</p>
+    <div id="errorHunt"></div>
+    <button class="btn" style="margin-top:12px;background:rgba(255,255,255,.07)" onclick="loadErrorHunt()">🔄 Nouveau calcul</button>
+  </div>
+
+  <!-- QCM SEC 2 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">❓</span> Quiz — Chauffage électrique</div>
+    <div id="quiz2"></div>
+    <button class="btn" style="margin-top:12px" onclick="loadQuiz2()">🔄 Nouvelle question</button>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECTION 3 : INSTALLATION DOMESTIQUE -->
+<!-- ================================================================ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="icon">🏠</div>
+    <div>
+      <h2>III. L'énergie dans une installation domestique</h2>
+      <p>Compteur électrique, constante, facture et coût de l'électricité.</p>
+    </div>
+  </div>
+
+  <!-- COMPTEUR ÉLECTRIQUE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔄</span> Le compteur électrique</div>
+    <div class="grid2">
+      <div>
+        <p style="font-size:.88rem;line-height:1.7;margin-bottom:12px">
+          Le <strong style="color:var(--primary)">compteur électrique</strong> est un appareil installé dans chaque habitation pour mesurer l'énergie électrique consommée.
+        </p>
+        <p style="font-size:.88rem;line-height:1.7;margin-bottom:12px">
+          Il possède un <strong style="color:var(--accent)">disque tournant</strong> dont la vitesse de rotation est proportionnelle à la puissance consommée.
+        </p>
+        <div class="info-box">
+          🔄 Plus la consommation est élevée, plus le disque tourne <strong>vite</strong>.
+        </div>
+        <div style="margin-top:12px">
+          <div class="tag">Unité affichée : kWh</div>
+          <div class="tag accent">Relevé mensuel</div>
+          <div class="tag purple">Index</div>
+        </div>
+      </div>
+      <!-- COMPTEUR ANIMÉ -->
+      <div class="meter-wrap">
+        <div style="font-size:.8rem;color:var(--text2);font-weight:600">Compteur électrique animé</div>
+        <svg class="meter-svg" viewBox="0 0 200 200" id="meterSVG" xmlns="http://www.w3.org/2000/svg">
+          <!-- Boîtier -->
+          <rect x="10" y="10" width="180" height="180" rx="18" fill="#0a1a2e" stroke="#00d4ff" stroke-width="2.5"/>
+          <rect x="20" y="20" width="160" height="160" rx="14" fill="#050d1a" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+          <!-- Disque -->
+          <circle cx="100" cy="100" r="60" fill="#0a1520" stroke="#00d4ff" stroke-width="1.5"/>
+          <ellipse cx="100" cy="100" rx="60" ry="15" fill="rgba(0,212,255,0.08)"/>
+          <line x1="100" y1="45" x2="100" y2="155" stroke="#00d4ff" stroke-width="1" stroke-dasharray="3,8"/>
+          <g id="meterDisk" transform-origin="100 100">
+            <!-- Disque avec marque -->
+            <circle cx="100" cy="100" r="55" fill="rgba(0,212,255,0.04)" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+            <line x1="100" y1="55" x2="100" y2="75" stroke="#00d4ff" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="100" cy="100" r="8" fill="#00d4ff"/>
+            <circle cx="100" cy="100" r="4" fill="#0a1520"/>
+          </g>
+          <!-- Labels -->
+          <text x="100" y="175" fill="#00d4ff" font-size="8" text-anchor="middle" font-family="monospace">COMPTEUR ÉLECTRIQUE</text>
+          <text x="100" y="35" fill="rgba(255,255,255,0.5)" font-size="7" text-anchor="middle" font-family="monospace">ONEE · 220V · 50Hz</text>
+        </svg>
+        <!-- Affichage index -->
+        <div class="meter-display" id="meterIndex">00000 kWh</div>
+        <div style="font-size:.75rem;color:var(--text2)">Vitesse : <span id="meterSpeedLbl">lent</span></div>
+        <div class="meter-controls">
+          <button class="btn" onclick="setMeterSpeed(1)">🐢 Lent</button>
+          <button class="btn accent" onclick="setMeterSpeed(3)">⚡ Normal</button>
+          <button class="btn red" onclick="setMeterSpeed(8)">🚀 Rapide</button>
+          <button class="btn" style="background:rgba(255,255,255,.07)" onclick="resetMeter()">🔄 Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSTANTE DU COMPTEUR -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📏</span> La constante du compteur (C)</div>
+    <p style="font-size:.88rem;line-height:1.7;margin-bottom:14px">
+      La <strong style="color:var(--primary)">constante du compteur C</strong> est le nombre de tours que doit effectuer le disque pour que le compteur enregistre 1 kWh d'énergie consommée.
+    </p>
+    <div class="formula-box">
+      <div class="formula"><span>C</span> = tours/kWh</div>
+      <div class="formula-sub">Exprimée en tours par kilowatt-heure (tr/kWh)</div>
+    </div>
+    <div class="sep"></div>
+    <p style="font-size:.88rem;color:var(--text2);margin-bottom:12px">
+      En connaissant le nombre de tours <strong style="color:var(--accent)">n</strong> effectués par le disque et la constante <strong style="color:var(--primary)">C</strong>, on calcule l'énergie :
+    </p>
+    <div class="formula-box glow-anim">
+      <div class="formula"><span>E</span> = <span style="color:var(--accent)">n</span> / <span>C</span></div>
+      <div class="formula-sub">Énergie (kWh) = Nombre de tours ÷ Constante (tr/kWh)</div>
+    </div>
+    <div class="info-box warning" style="margin-top:12px">
+      ⚠️ <strong>Exemple :</strong> Si C = 375 tr/kWh et le disque fait n = 750 tours, alors E = 750 ÷ 375 = <strong>2 kWh</strong>
+    </div>
+  </div>
+
+  <!-- SIMULATION CONSTANTE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🧮</span> Calculatrice — Constante du compteur</div>
+    <div class="lab-grid">
+      <div>
+        <div class="lab-slider-wrap">
+          <label>Nombre de tours n <span id="nLbl">375</span> tours</label>
+          <input type="range" min="10" max="2000" value="375" id="nSl" oninput="updateConst()">
+        </div>
+        <div class="lab-slider-wrap">
+          <label>Constante C <span id="cLbl">375</span> tr/kWh</label>
+          <input type="range" min="50" max="1000" value="375" id="cSl" oninput="updateConst()">
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="lab-result">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Énergie consommée E = n ÷ C</div>
+          <div class="big-val" id="constE">1.00</div>
+          <div class="big-unit">kWh</div>
+        </div>
+        <div class="lab-result" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.3)">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Conversion en Joules</div>
+          <div class="big-val" style="color:var(--accent);font-size:1.4rem" id="constEJ">3 600 000 J</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION FACTURE ÉLECTRIQUE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📄</span> Mission Facture Électrique</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:16px">Analyse cette facture et réponds aux questions. Tu es l'agent de contrôle !</p>
+    
+    <!-- Facture générée -->
+    <div class="bill" id="billDisplay"></div>
+    
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px" id="billQuestions"></div>
+    
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn green" onclick="checkBill()">✅ Vérifier mes réponses</button>
+      <button class="btn" style="background:rgba(255,255,255,.07)" onclick="loadBill()">🔄 Nouvelle facture</button>
+    </div>
+    <div class="quiz-feedback" id="billFb"></div>
+  </div>
+
+  <!-- QCM SEC 3 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">❓</span> Quiz — Installation domestique</div>
+    <div id="quiz3"></div>
+    <button class="btn" style="margin-top:12px" onclick="loadQuiz3()">🔄 Nouvelle question</button>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECTION 4 : LABO VIRTUEL -->
+<!-- ================================================================ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="icon">🧪</div>
+    <div>
+      <h2>Laboratoire Virtuel</h2>
+      <p>Branche des appareils, modifie les paramètres et explore la consommation.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🏠</span> Maison virtuelle — Panneau de contrôle</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:16px">Active ou désactive des appareils et paramètre leur utilisation pour calculer la consommation totale.</p>
+    
+    <div class="grid2">
+      <!-- Appareils -->
+      <div>
+        <p style="font-size:.82rem;font-weight:700;color:var(--primary);margin-bottom:10px">Appareils disponibles :</p>
+        <div id="labDevices" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <!-- Résultats -->
+      <div>
+        <p style="font-size:.82rem;font-weight:700;color:var(--primary);margin-bottom:10px">Consommation totale :</p>
+        <div class="lab-result" style="margin-bottom:10px">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Puissance totale</div>
+          <div class="big-val" id="labTotalP">0 W</div>
+        </div>
+        <div class="lab-slider-wrap">
+          <label>Durée d'utilisation <span id="labDurLbl">8</span> h</label>
+          <input type="range" min="1" max="24" value="8" id="labDurSl" oninput="updateLab()">
+        </div>
+        <div class="lab-result" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.3);margin-top:10px">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Énergie totale</div>
+          <div class="big-val" style="color:var(--accent)" id="labTotalE">0 kWh</div>
+        </div>
+        <div class="lab-result" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.3);margin-top:10px">
+          <div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">Coût estimé (1,5 DH/kWh)</div>
+          <div class="big-val" style="color:var(--purple)" id="labCost">0,00 DH</div>
+        </div>
+        <!-- Barre consommation -->
+        <div style="margin-top:14px">
+          <div style="font-size:.75rem;color:var(--text2);margin-bottom:6px">Niveau de consommation</div>
+          <div style="height:12px;background:rgba(255,255,255,.08);border-radius:50px;overflow:hidden">
+            <div id="labBar" style="height:100%;width:0%;border-radius:50px;transition:all .5s;background:linear-gradient(90deg,var(--green),var(--accent))"></div>
+          </div>
+          <div style="font-size:.72rem;color:var(--text2);margin-top:4px" id="labBarLabel">Économique</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG Maison -->
+    <div style="margin-top:20px;text-align:center">
+      <svg viewBox="0 0 500 200" style="max-width:500px;width:100%" xmlns="http://www.w3.org/2000/svg" id="houseSVG">
+        <!-- Maison -->
+        <polygon points="250,20 50,120 450,120" fill="#0a1520" stroke="#00d4ff" stroke-width="2"/>
+        <rect x="70" y="120" width="360" height="70" rx="3" fill="#0a1520" stroke="#00d4ff" stroke-width="2"/>
+        <!-- Porte -->
+        <rect x="215" y="140" width="70" height="50" rx="4" fill="#0d1f35" stroke="rgba(0,212,255,0.4)" stroke-width="1.5"/>
+        <!-- Fenêtres -->
+        <rect x="85" y="135" width="60" height="40" rx="4" fill="#0d1f35" stroke="rgba(0,212,255,0.4)" stroke-width="1.5" id="hw1"/>
+        <rect x="355" y="135" width="60" height="40" rx="4" fill="#0d1f35" stroke="rgba(0,212,255,0.4)" stroke-width="1.5" id="hw2"/>
+        <!-- Icônes lumière -->
+        <text x="110" y="162" text-anchor="middle" font-size="18" id="hIcon1">💡</text>
+        <text x="380" y="162" text-anchor="middle" font-size="18" id="hIcon2">🌙</text>
+        <text x="250" y="162" text-anchor="middle" font-size="16" id="hIconDoor">🚪</text>
+        <!-- Sol -->
+        <line x1="30" y1="192" x2="470" y2="192" stroke="rgba(0,212,255,0.2)" stroke-width="1.5"/>
+        <!-- Compteur -->
+        <rect x="455" y="130" width="30" height="40" rx="4" fill="#0a1520" stroke="#00ff88" stroke-width="1.5"/>
+        <text x="470" y="148" text-anchor="middle" fill="#00ff88" font-size="7" font-family="monospace">kWh</text>
+        <text x="470" y="162" text-anchor="middle" fill="#00ff88" font-size="8" font-family="monospace" id="houseKwh">0.0</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- JEU DE RAPIDITÉ -->
+  <div class="card">
+    <div class="card-title"><span class="icon">⚡</span> Jeu de rapidité — Calcul express !</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:14px">Réponds le plus vite possible ! Le chronomètre tourne…</p>
+    <div id="speedGame">
+      <div style="text-align:center">
+        <button class="btn accent" onclick="startSpeedGame()" style="font-size:1rem;padding:14px 30px">🚀 Démarrer le défi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECTION 5 : ESCAPE GAME -->
+<!-- ================================================================ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="icon">🎮</div>
+    <div>
+      <h2>Escape Game Pédagogique</h2>
+      <p>Résous les énigmes pour alimenter la maison en électricité !</p>
+    </div>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg,rgba(255,107,53,0.06),rgba(168,85,247,0.06));border-color:rgba(255,107,53,0.2)">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:3rem;margin-bottom:10px">🏠⚡</div>
+      <div style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px">Mission : Alimenter la maison</div>
+      <div style="font-size:.85rem;color:var(--text2)">La centrale électrique est en panne. Résous les 4 défis pour rétablir le courant !</div>
+    </div>
+    
+    <div class="step-indicator" id="escapeSteps"></div>
+    
+    <!-- ÉTAPES -->
+    <div id="escapeContainer"></div>
+    
+    <div id="escapeSuccess" style="display:none;text-align:center;padding:30px">
+      <div style="font-size:4rem;margin-bottom:14px;animation:bounce-in .5s ease">🎉</div>
+      <div style="font-size:1.3rem;font-weight:900;color:var(--green);margin-bottom:8px">Mission accomplie !</div>
+      <div style="font-size:.88rem;color:var(--text2);margin-bottom:16px">La maison est maintenant alimentée. Tu maîtrises l'énergie électrique !</div>
+      <button class="btn green" onclick="restartEscape()">🔄 Rejouer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECTION 6 : CARTE MENTALE -->
+<!-- ================================================================ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="icon">🗺️</div>
+    <div>
+      <h2>Carte Mentale Interactive</h2>
+      <p>Clique sur chaque nœud pour découvrir les détails.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="mindmap" id="mindMap">
+      <svg id="mmSvg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></svg>
+      <!-- Nodes placed by JS -->
+    </div>
+    <div class="mm-tooltip" id="mmTooltip"></div>
+    <div class="card" style="margin-top:14px;margin-bottom:0;padding:16px" id="mmDetail">
+      <div style="font-size:.88rem;color:var(--text2)">👆 Clique sur un nœud de la carte pour afficher les détails.</div>
+    </div>
+  </div>
+
+  <!-- DRAG & DROP UNITÉS -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🎯</span> Glisser-déposer — Grandeur ↔ Unité</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:14px">Glisse chaque grandeur vers son unité correcte.</p>
+    <div style="margin-bottom:10px">
+      <div style="font-size:.78rem;color:var(--text2);margin-bottom:8px">Grandeurs (à glisser) :</div>
+      <div class="drag-zone" id="dragSource"></div>
+    </div>
+    <div id="dropZones" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn green" onclick="checkDnD()">✅ Vérifier</button>
+      <button class="btn" style="background:rgba(255,255,255,.07)" onclick="resetDnD()">🔄 Recommencer</button>
+    </div>
+    <div class="quiz-feedback" id="dndFb"></div>
+  </div>
+
+  <!-- CLASSEMENT APPAREILS -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> Classe les appareils par puissance</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:14px">Glisse les appareils pour les classer du moins puissant au plus puissant.</p>
+    <div id="sortContainer"></div>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn green" onclick="checkSort()">✅ Vérifier l'ordre</button>
+      <button class="btn" style="background:rgba(255,255,255,.07)" onclick="initSort()">🔄 Mélanger</button>
+    </div>
+    <div class="quiz-feedback" id="sortFb"></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECTION 7 : DÉFI FINAL -->
+<!-- ================================================================ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <div class="icon">🏆</div>
+    <div>
+      <h2>Défi Final Multi-Niveaux</h2>
+      <p>4 niveaux de difficulté croissante. Dépasse-toi !</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:.85rem;color:var(--text2);margin-bottom:10px">Niveau actuel</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap" id="levelIndicator"></div>
+    </div>
+    <div id="finalChallenge"></div>
+  </div>
+
+  <!-- RÉSUMÉ COMPLET -->
+  <div class="card" style="margin-top:24px">
+    <div class="card-title"><span class="icon">📋</span> Résumé complet du cours</div>
+    <div class="formula-box" style="margin-bottom:14px">
+      <div style="font-size:.85rem;font-weight:700;color:var(--primary);margin-bottom:8px">I. Énergie d'un appareil électrique</div>
+      <div class="formula"><span>E</span> = <span>P</span> × <span>t</span></div>
+    </div>
+    <div class="formula-box" style="border-color:rgba(255,215,0,.3);background:linear-gradient(135deg,rgba(255,215,0,.06),transparent);margin-bottom:14px">
+      <div style="font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:8px">II. Puissance d'un appareil de chauffage</div>
+      <div class="formula"><span>P</span> = <span>U</span> × <span>I</span></div>
+      <div style="margin-top:10px">
+        <div class="formula" style="font-size:1.4rem"><span>E</span> = <span>U</span> × <span>I</span> × <span>t</span> = <span>R</span> × <span>I²</span> × <span>t</span></div>
+      </div>
+    </div>
+    <div class="formula-box" style="border-color:rgba(0,255,136,.3);background:linear-gradient(135deg,rgba(0,255,136,.06),transparent)">
+      <div style="font-size:.85rem;font-weight:700;color:var(--green);margin-bottom:8px">III. Compteur électrique</div>
+      <div class="formula"><span>E</span> = <span style="color:var(--accent)">n</span> / <span>C</span></div>
+      <div class="formula-sub">E en kWh · n = tours · C = constante (tr/kWh)</div>
+    </div>
+    <table class="unit-table" style="margin-top:16px">
+      <thead><tr><th>Grandeur</th><th>Symbole</th><th>Unité SI</th><th>Autres unités</th></tr></thead>
+      <tbody>
+        <tr><td>Énergie</td><td><strong style="color:var(--primary)">E</strong></td><td>J</td><td>kJ · Wh · kWh</td></tr>
+        <tr><td>Puissance</td><td><strong style="color:var(--accent)">P</strong></td><td>W</td><td>kW · MW</td></tr>
+        <tr><td>Durée</td><td><strong style="color:var(--purple)">t</strong></td><td>s</td><td>min · h</td></tr>
+        <tr><td>Tension</td><td><strong style="color:var(--green)">U</strong></td><td>V</td><td>kV · mV</td></tr>
+        <tr><td>Intensité</td><td><strong style="color:var(--accent2)">I</strong></td><td>A</td><td>mA</td></tr>
+        <tr><td>Résistance</td><td><strong style="color:var(--primary)">R</strong></td><td>Ω</td><td>kΩ · MΩ</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+/* ========================================================
+   GLOBALS
+   ======================================================== */
+let score = 0;
+let badges = [];
+let streak = 0;
+let completedSections = new Set();
+let meterAngle = 0;
+let meterSpeed = 0;
+let meterKwh = 0;
+let meterRAF = null;
+let selectedApp = null;
+let selectedAppP = 0;
+
+/* ========================================================
+   NAV
+   ======================================================== */
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  
+  completedSections.add(id);
+  updateProgress();
+  
+  // Init on first visit
+  if(id==='s3' && !window.billLoaded){window.billLoaded=true; loadBill(); initMeterAnim();}
+  if(id==='s4' && !window.labInit){window.labInit=true; initLab();}
+  if(id==='s5' && !window.escInit){window.escInit=true; initEscape();}
+  if(id==='s6' && !window.mmInit){window.mmInit=true; initMindMap(); initDnD(); initSort();}
+  if(id==='s7' && !window.finalInit){window.finalInit=true; initFinalChallenge();}
+}
+
+/* ========================================================
+   SCORE & PROGRESS
+   ======================================================== */
+function addScore(pts) {
+  score += pts;
+  streak++;
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('streakVal').textContent = streak;
+  
+  // Streak badges
+  if(streak === 3) showBadge('🔥','Série de 3 !','3 bonnes réponses consécutives');
+  if(streak === 5) showBadge('⚡','Électrisé !','5 bonnes réponses d\'affilée');
+  if(score >= 100 && !badges.includes('100')) { badges.push('100'); showBadge('💯','Centurion !','100 points atteints'); }
+  if(score >= 250 && !badges.includes('250')) { badges.push('250'); showBadge('🏆','Expert !','250 points atteints'); }
+  document.getElementById('badgeCount').textContent = badges.length;
+}
+
+function loseStreak() { streak = 0; document.getElementById('streakVal').textContent = 0; }
+
+function updateProgress() {
+  const total = 7;
+  const pct = Math.round((completedSections.size / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '% du parcours complété — ' + completedSections.size + '/' + total + ' sections visitées';
+  if(pct === 100) showBadge('🌟','Maître de l\'énergie !','Toutes les sections complétées !');
+}
+
+function showBadge(icon, title, desc) {
+  const bp = document.getElementById('badgePopup');
+  document.getElementById('badgeIcon').textContent = icon;
+  document.getElementById('badgeTitle').textContent = title;
+  document.getElementById('badgeDesc').textContent = desc;
+  bp.classList.add('show');
+  setTimeout(() => bp.classList.remove('show'), 3500);
+}
+
+/* ========================================================
+   SECTION 1
+   ======================================================== */
+// Appareil selector
+function selectAppareil(el, p, name) {
+  document.querySelectorAll('#appChoices .quiz-opt').forEach(b => b.classList.remove('selected'));
+  el.style.borderColor = 'var(--primary)';
+  el.style.background = 'rgba(0,212,255,0.1)';
+  selectedApp = name;
+  selectedAppP = p;
+  updateExp1();
+}
+
+function updateExp1() {
+  const duree = parseInt(document.getElementById('duree1Sl').value);
+  document.getElementById('duree1Lbl').textContent = duree;
+  if(!selectedApp) return;
+  const p = selectedAppP;
+  const tSec = duree * 60;
+  const eJ = p * tSec;
+  const eWh = p * (duree/60);
+  const eKwh = eWh / 1000;
+  
+  let displayE, unit;
+  if(eJ < 1000) { displayE = eJ.toFixed(0); unit = 'J'; }
+  else if(eJ < 1000000) { displayE = (eJ/1000).toFixed(2); unit = 'kJ'; }
+  else if(eWh < 1000) { displayE = eWh.toFixed(2); unit = 'Wh'; }
+  else { displayE = eKwh.toFixed(3); unit = 'kWh'; }
+  
+  document.getElementById('exp1E').textContent = displayE;
+  document.getElementById('exp1Unit').textContent = unit + ' (' + (eJ/1000).toFixed(1) + ' kJ)';
+  document.getElementById('exp1Detail').innerHTML =
+    `<strong style="color:var(--primary)">${selectedApp}</strong> · P = ${p} W<br>
+    Durée = ${duree} min = ${tSec} s<br>
+    <strong>E = ${p} W × ${tSec} s = ${eJ.toLocaleString('fr-FR')} J ≈ ${eKwh.toFixed(3)} kWh</strong>`;
+}
+
+// Puzzle
+const puzzlePieces2 = ['E', '=', 'P', '×', 't'];
+const correctOrder = ['E','=','P','×','t'];
+let puzzlePlaced = [];
+
+function resetPuzzle() {
+  puzzlePlaced = [];
+  const pp = document.getElementById('puzzlePieces');
+  const ps = document.getElementById('puzzleSlots');
+  pp.innerHTML = '';
+  ps.innerHTML = '';
+  document.getElementById('puzzleFb').className = 'quiz-feedback';
+  
+  [...puzzlePieces2].sort(() => Math.random()-.5).forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.textContent = p;
+    el.style.fontSize = '1.1rem';
+    el.style.fontFamily = 'monospace';
+    el.style.cursor = 'pointer';
+    el.onclick = () => placePuzzle(el, p);
+    pp.appendChild(el);
+  });
+}
+
+function placePuzzle(el, val) {
+  if(puzzlePlaced.length >= 5) return;
+  puzzlePlaced.push(val);
+  el.style.opacity = '.3';
+  el.onclick = null;
+  const ps = document.getElementById('puzzleSlots');
+  const slot = document.createElement('div');
+  slot.className = 'drag-item';
+  slot.textContent = val;
+  slot.style.fontSize = '1.2rem';
+  slot.style.fontFamily = 'monospace';
+  slot.onclick = () => { puzzlePlaced.splice(puzzlePlaced.indexOf(val),1); ps.removeChild(slot); el.style.opacity='1'; el.onclick = () => placePuzzle(el,val); };
+  ps.appendChild(slot);
+}
+
+function checkPuzzle() {
+  const fb = document.getElementById('puzzleFb');
+  fb.className = 'quiz-feedback show';
+  if(JSON.stringify(puzzlePlaced) === JSON.stringify(correctOrder)) {
+    fb.className += ' ok';
+    fb.textContent = '✅ Parfait ! E = P × t est la formule fondamentale de l\'énergie électrique !';
+    addScore(15);
+    showBadge('🧩','Puzzle résolu !','Formule correctement reconstituée');
+  } else {
+    fb.className += ' ko';
+    fb.textContent = '❌ Pas tout à fait… Rappelle-toi : E = P × t. La réponse est : E, =, P, ×, t';
+    loseStreak();
+  }
+}
+
+// QCM 1
+const q1pool = [
+  {q:"Quelle est l'unité SI de l'énergie électrique ?",opts:["Watt (W)","Joule (J)","Ampère (A)","Volt (V)"],a:1,exp:"L'unité SI de l'énergie est le Joule (J). 1 kWh = 3 600 000 J."},
+  {q:"1 kWh est égal à combien de Joules ?",opts:["1 000 J","3 600 J","3 600 000 J","1 000 000 J"],a:2,exp:"1 kWh = 1000 Wh × 3600 s = 3 600 000 J."},
+  {q:"Une lampe de 60 W fonctionne pendant 2 heures. Quelle énergie consomme-t-elle ?",opts:["30 Wh","120 Wh","60 Wh","240 Wh"],a:1,exp:"E = P × t = 60 W × 2 h = 120 Wh."},
+  {q:"Quelle formule relie énergie, puissance et durée ?",opts:["E = P + t","E = P × t","P = E × t","E = P / t"],a:1,exp:"La relation fondamentale est E = P × t."},
+  {q:"Un appareil de 500 W fonctionne 30 minutes. Son énergie consommée est :",opts:["250 Wh","15 000 J","15 kJ","250 J"],a:1,exp:"t = 30 min = 1800 s. E = 500 × 1800 = 900 000 J = 900 kJ. Ou : E = 500 W × 0.5 h = 250 Wh."},
+  {q:"1 Wh vaut combien de Joules ?",opts:["60 J","600 J","3600 J","1000 J"],a:2,exp:"1 Wh = 1 W × 3600 s = 3600 J."},
+];
+let q1idx = -1;
+function loadQuiz1() { q1idx = (q1idx+1) % q1pool.length; renderQuiz('quiz1', q1pool[q1idx], 'q1'); }
+
+const q2pool = [
+  {q:"Quelle est la relation entre puissance, tension et intensité pour un chauffage ?",opts:["P = U + I","P = U × I","P = U / I","P = U - I"],a:1,exp:"P = U × I est la formule de la puissance électrique."},
+  {q:"Un radiateur de résistance R = 40 Ω est parcouru par I = 3 A. Sa puissance est :",opts:["360 W","120 W","13.3 W","43 W"],a:0,exp:"U = R×I = 40×3 = 120 V. P = U×I = 120×3 = 360 W."},
+  {q:"La loi d'Ohm est :",opts:["U = R + I","U = R × I","U = R / I","U = R - I"],a:1,exp:"U = R × I est la loi d'Ohm. R s'exprime en Ohm (Ω)."},
+  {q:"E = R × I² × t est valide uniquement pour :",opts:["Tout appareil électrique","Un moteur électrique","Un appareil résistif (chauffage)","Une lampe fluocompacte"],a:2,exp:"Cette formule est issue de P = R×I² qui s'applique aux résistances (appareils de chauffage)."},
+  {q:"Un fer à repasser R = 25 Ω, I = 4 A, fonctionne 30 min. Calculer E :",opts:["6000 J","120 000 J","3600 J","7200 J"],a:1,exp:"t = 30×60 = 1800 s. E = R×I²×t = 25×16×1800 = 720 000 J. Vérif : P = 25×16 = 400 W, E = 400×1800 = 720 000 J."},
+];
+let q2idx = -1;
+function loadQuiz2() { q2idx = (q2idx+1) % q2pool.length; renderQuiz('quiz2', q2pool[q2idx], 'q2'); }
+
+const q3pool = [
+  {q:"Que mesure le compteur électrique ?",opts:["La puissance instantanée","La tension du réseau","L'énergie électrique consommée","L'intensité du courant"],a:2,exp:"Le compteur mesure l'énergie totale consommée, affichée en kWh."},
+  {q:"La constante C d'un compteur vaut 375 tr/kWh. Le disque effectue 750 tours. Quelle énergie a été consommée ?",opts:["0.5 kWh","1 kWh","2 kWh","375 kWh"],a:2,exp:"E = n/C = 750/375 = 2 kWh."},
+  {q:"L'index d'un compteur passe de 1250 à 1380 kWh. L'énergie consommée est :",opts:["1380 kWh","1250 kWh","130 kWh","2630 kWh"],a:2,exp:"E = Index nouveau - Index ancien = 1380 - 1250 = 130 kWh."},
+  {q:"Si le prix du kWh est 1.20 DH et on a consommé 150 kWh, le coût est :",opts:["125 DH","150 DH","180 DH","120 DH"],a:2,exp:"Coût = 150 × 1.20 = 180 DH."},
+];
+let q3idx = -1;
+function loadQuiz3() { q3idx = (q3idx+1) % q3pool.length; renderQuiz('quiz3', q3pool[q3idx], 'q3'); }
+
+function renderQuiz(containerId, qdata, key) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = `<div class="quiz-q">${qdata.q}</div><div class="quiz-opts" id="${key}opts"></div><div class="quiz-feedback" id="${key}fb"></div>`;
+  const opts = document.getElementById(key+'opts');
+  qdata.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = o;
+    btn.onclick = () => answerQuiz(key, i, qdata.a, qdata.exp);
+    opts.appendChild(btn);
+  });
+}
+
+function answerQuiz(key, chosen, correct, exp) {
+  const opts = document.querySelectorAll(`#${key}opts .quiz-opt`);
+  opts.forEach((b,i) => {
+    b.disabled = true;
+    if(i === correct) b.classList.add('correct');
+    else if(i === chosen && chosen !== correct) b.classList.add('wrong');
+  });
+  const fb = document.getElementById(key+'fb');
+  fb.className = 'quiz-feedback show';
+  if(chosen === correct) {
+    fb.className += ' ok';
+    fb.textContent = '✅ Bravo ! ' + exp;
+    addScore(10);
+  } else {
+    fb.className += ' ko';
+    fb.textContent = '❌ Pas tout à fait. ' + exp;
+    loseStreak();
+  }
+}
+
+// Fill in exercise
+const fillEx = [
+  {q:"Un téléviseur de P = <b>200 W</b> fonctionne pendant t = <b>3 h</b>.",field:"E",correct:600,unit:"Wh",hint:"E = P × t = 200 × 3 = ?"},
+  {q:"Un four micro-ondes consomme E = <b>1800 J</b> en t = <b>60 s</b>.",field:"P",correct:30,unit:"W",hint:"P = E / t = 1800 / 60 = ?"},
+  {q:"Une machine à laver P = <b>1500 W</b> consomme E = <b>4500 Wh</b>.",field:"t",correct:3,unit:"h",hint:"t = E / P = 4500 / 1500 = ?"},
+];
+let fillIdx = 0;
+function loadFill1() {
+  fillIdx = (fillIdx+1)%fillEx.length;
+  const ex = fillEx[fillIdx];
+  document.getElementById('fillEx1').innerHTML = `
+    <div class="info-box" style="margin-bottom:12px">${ex.q}</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:.9rem">Calcule <strong style="color:var(--primary)">${ex.field}</strong> = </span>
+      <input type="number" class="fill-input" id="fillInput1" placeholder="?">
+      <span class="tag">${ex.unit}</span>
+    </div>
+    <div class="info-box warning" style="margin-top:10px;font-size:.78rem">💡 Indice : ${ex.hint}</div>`;
+  document.getElementById('fillFb1').className = 'quiz-feedback';
+}
+function checkFill1() {
+  const val = parseFloat(document.getElementById('fillInput1').value);
+  const ex = fillEx[fillIdx];
+  const fb = document.getElementById('fillFb1');
+  const inp = document.getElementById('fillInput1');
+  fb.className = 'quiz-feedback show';
+  if(Math.abs(val - ex.correct) < 0.1) {
+    fb.className += ' ok'; fb.textContent = `✅ Excellent ! ${ex.field} = ${ex.correct} ${ex.unit}`;
+    inp.className = 'fill-input ok'; addScore(12);
+  } else {
+    fb.className += ' ko'; fb.textContent = `❌ La bonne réponse est ${ex.correct} ${ex.unit}. ${ex.hint}`;
+    inp.className = 'fill-input ko'; loseStreak();
+  }
+}
+
+/* ========================================================
+   SECTION 2 — HEATING SIMULATOR
+   ======================================================== */
+function updateHeating() {
+  const R = parseFloat(document.getElementById('rSl').value);
+  const I = parseFloat(document.getElementById('iSl').value);
+  const t = parseFloat(document.getElementById('tSl').value);
+  document.getElementById('rLbl').textContent = R;
+  document.getElementById('iLbl').textContent = I;
+  document.getElementById('tLbl').textContent = t;
+  
+  const U = R * I;
+  const P = U * I;
+  const tSec = t * 60;
+  const E = R * I * I * tSec;
+  
+  document.getElementById('heatU').textContent = U.toFixed(1) + ' V';
+  document.getElementById('heatP').textContent = P.toFixed(0) + ' W';
+  document.getElementById('heatE').textContent = (E/1000).toFixed(1) + ' kJ';
+  document.getElementById('svgU').textContent = U.toFixed(0);
+  document.getElementById('svgR').textContent = R;
+  document.getElementById('svgI').textContent = I;
+}
+
+// Matching formulas
+let matchSelected = null;
+function matchSel(el, key) {
+  const isLeft = el.parentElement.id === 'mLeft';
+  if(!matchSelected) {
+    matchSelected = {el, key, isLeft};
+    el.classList.add('selected');
+  } else {
+    if(matchSelected.isLeft === isLeft) {
+      matchSelected.el.classList.remove('selected');
+      matchSelected = {el, key, isLeft};
+      el.classList.add('selected');
+      return;
+    }
+    // Check match
+    if(matchSelected.key === key) {
+      matchSelected.el.classList.remove('selected');
+      matchSelected.el.classList.add('matched-ok');
+      el.classList.add('matched-ok');
+      addScore(8);
+      checkAllMatched();
+    } else {
+      matchSelected.el.classList.remove('selected');
+      matchSelected.el.classList.add('matched-ko');
+      el.classList.add('matched-ko');
+      loseStreak();
+      setTimeout(()=>{ matchSelected.el.classList.remove('matched-ko'); el.classList.remove('matched-ko'); },1000);
+    }
+    matchSelected = null;
+  }
+}
+function checkAllMatched() {
+  const all = document.querySelectorAll('.match-item');
+  if([...all].every(el => el.classList.contains('matched-ok'))) {
+    const fb = document.getElementById('matchFb');
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '🎉 Toutes les associations sont correctes ! Tu maîtrises les formules.';
+    showBadge('🔗','Formules liées !','Toutes les associations réussies');
+  }
+}
+
+// Error hunt
+const errorCases = [
+  {
+    parts: [
+      {text:'P = 50 W, t = 2 h\n', ok:true},
+      {text:'E = P × t\n', ok:true},
+      {text:'E = 50 × 2 = 100 J', ok:false, errorHere:true},
+    ],
+    errIdx:2,
+    explanation:"❌ L'erreur est dans l'unité ! E = 50 W × 2 h = 100 Wh (pas de J). Pour avoir des J, il faut t en secondes : 50 × 7200 = 360 000 J."
+  },
+  {
+    parts: [
+      {text:'R = 10 Ω, I = 3 A\n', ok:true},
+      {text:'U = R × I = 10 × 3 = 30 V\n', ok:true},
+      {text:'P = U + I = 30 + 3 = 33 W', ok:false, errorHere:true},
+    ],
+    errIdx:2,
+    explanation:"❌ L'erreur est dans la formule ! P = U × I (multiplication), pas P = U + I. Donc P = 30 × 3 = 90 W."
+  },
+  {
+    parts: [
+      {text:'C = 375 tr/kWh, n = 750 tours\n', ok:true},
+      {text:'E = n × C\n', ok:false, errorHere:true},
+      {text:'E = 750 × 375 = 281 250 kWh', ok:false},
+    ],
+    errIdx:1,
+    explanation:"❌ L'erreur est dans la formule ! E = n ÷ C (division), pas n × C. Donc E = 750 ÷ 375 = 2 kWh."
+  },
+];
+let errorIdx = 0;
+function loadErrorHunt() {
+  errorIdx = (errorIdx+1) % errorCases.length;
+  const ec = errorCases[errorIdx];
+  const cont = document.getElementById('errorHunt');
+  cont.innerHTML = '<div class="error-calc">' +
+    ec.parts.map((p, i) => `<span class="error-part" onclick="clickError(${i},${ec.errIdx},'${ec.explanation.replace(/'/g,"\\'")}')" data-idx="${i}">${p.text.replace(/\n/g,'<br>')}</span>`).join('') +
+    '</div><div class="quiz-feedback" id="errorFb"></div>';
+}
+function clickError(clicked, correct, explanation) {
+  const parts = document.querySelectorAll('.error-part');
+  const fb = document.getElementById('errorFb');
+  fb.className = 'quiz-feedback show';
+  if(clicked === correct) {
+    parts[clicked].classList.add('found');
+    fb.className += ' ok';
+    fb.textContent = explanation;
+    addScore(15);
+  } else {
+    parts[clicked].classList.add('found');
+    setTimeout(()=>parts[clicked].classList.remove('found'),800);
+    fb.className += ' ko';
+    fb.textContent = '🔍 Pas là… Regarde plus attentivement chaque étape du calcul.';
+    loseStreak();
+  }
+}
+
+/* ========================================================
+   SECTION 3 — METER & BILL
+   ======================================================== */
+function initMeterAnim() {
+  const disk = document.getElementById('meterDisk');
+  if(!disk) return;
+  function animate() {
+    if(meterSpeed > 0) {
+      meterAngle += meterSpeed;
+      disk.setAttribute('transform', `rotate(${meterAngle} 100 100)`);
+      meterKwh += meterSpeed * 0.000001;
+      const idx = Math.floor(meterKwh * 100) / 100;
+      document.getElementById('meterIndex').textContent = idx.toFixed(5).replace('.',',') + ' kWh';
+    }
+    meterRAF = requestAnimationFrame(animate);
+  }
+  if(meterRAF) cancelAnimationFrame(meterRAF);
+  animate();
+}
+
+function setMeterSpeed(s) {
+  meterSpeed = s;
+  const labels = {1:'lent 🐢',3:'normal ⚡',8:'rapide 🚀',0:'arrêté'};
+  document.getElementById('meterSpeedLbl').textContent = labels[s] || s;
+}
+function resetMeter() { meterKwh = 0; meterAngle = 0; meterSpeed = 0; document.getElementById('meterSpeedLbl').textContent = 'arrêté'; document.getElementById('meterIndex').textContent = '00000 kWh'; }
+
+function updateConst() {
+  const n = parseFloat(document.getElementById('nSl').value);
+  const c = parseFloat(document.getElementById('cSl').value);
+  document.getElementById('nLbl').textContent = n;
+  document.getElementById('cLbl').textContent = c;
+  const e = n / c;
+  document.getElementById('constE').textContent = e.toFixed(3);
+  document.getElementById('constEJ').textContent = (e * 3600000).toLocaleString('fr-FR') + ' J';
+}
+
+// Bill simulation
+const billData = [
+  {old:1240, newIdx:1480, prix:1.20, taxPct:14, taxName:'TVA'},
+  {old:3520, newIdx:3810, prix:1.35, taxPct:14, taxName:'TVA'},
+  {old:8900, newIdx:9340, prix:1.50, taxPct:20, taxName:'ONEE'},
+];
+let curBill = null;
+function loadBill() {
+  curBill = billData[Math.floor(Math.random()*billData.length)];
+  const conso = curBill.newIdx - curBill.old;
+  const ht = conso * curBill.prix;
+  const tax = ht * curBill.taxPct / 100;
+  const ttc = ht + tax;
+  
+  document.getElementById('billDisplay').innerHTML = `
+    <div style="text-align:center;font-weight:800;font-size:1rem;color:var(--primary);margin-bottom:14px">⚡ FACTURE D'ÉLECTRICITÉ</div>
+    <div class="bill-row"><span class="bill-label">Ancien index</span><span style="font-family:monospace">${curBill.old.toLocaleString('fr-FR')} kWh</span></div>
+    <div class="bill-row"><span class="bill-label">Nouvel index</span><span style="font-family:monospace">${curBill.newIdx.toLocaleString('fr-FR')} kWh</span></div>
+    <div class="bill-row"><span class="bill-label">Énergie consommée</span><span style="color:var(--accent);font-weight:700">? kWh</span></div>
+    <div class="bill-row"><span class="bill-label">Prix unitaire (HT)</span><span style="font-family:monospace">${curBill.prix.toFixed(2)} DH/kWh</span></div>
+    <div class="bill-row"><span class="bill-label">Montant HT</span><span style="color:var(--accent);font-weight:700">? DH</span></div>
+    <div class="bill-row"><span class="bill-label">${curBill.taxName} (${curBill.taxPct}%)</span><span style="color:var(--text2)">?</span></div>
+    <div class="bill-row" style="margin-top:8px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)">
+      <span class="bill-label" style="font-weight:700">TOTAL TTC</span>
+      <span class="bill-total">??? DH</span>
+    </div>`;
+  
+  document.getElementById('billQuestions').innerHTML = `
+    <div style="font-size:.85rem;font-weight:700;color:var(--primary);margin-bottom:8px">Réponds aux questions :</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <span style="font-size:.85rem">1. Énergie consommée (kWh) :</span>
+      <input type="number" class="fill-input" id="billQ1" placeholder="?">
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <span style="font-size:.85rem">2. Montant HT (DH) :</span>
+      <input type="number" class="fill-input" id="billQ2" placeholder="?">
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:.85rem">3. Total TTC (DH) :</span>
+      <input type="number" class="fill-input" id="billQ3" placeholder="?">
+    </div>`;
+  
+  window._billCorrect = {q1: conso, q2: parseFloat(ht.toFixed(2)), q3: parseFloat(ttc.toFixed(2))};
+}
+
+function checkBill() {
+  const bc = window._billCorrect;
+  const v1 = parseFloat(document.getElementById('billQ1').value);
+  const v2 = parseFloat(document.getElementById('billQ2').value);
+  const v3 = parseFloat(document.getElementById('billQ3').value);
+  let ok = 0;
+  const fb = document.getElementById('billFb');
+  
+  if(Math.abs(v1-bc.q1)<0.5) ok++;
+  if(Math.abs(v2-bc.q2)<1) ok++;
+  if(Math.abs(v3-bc.q3)<2) ok++;
+  
+  fb.className = 'quiz-feedback show';
+  if(ok === 3) {
+    fb.className += ' ok';
+    fb.textContent = `✅ Parfait ! Énergie = ${bc.q1} kWh · HT = ${bc.q2} DH · TTC = ${bc.q3.toFixed(2)} DH`;
+    addScore(20);
+    showBadge('📄','Expert facture !','Facture parfaitement analysée');
+  } else {
+    fb.className += ' ko';
+    fb.textContent = `${ok}/3 correct(s). Énergie = ${bc.q1} kWh · HT = ${bc.q2} DH · TTC = ${bc.q3.toFixed(2)} DH`;
+    loseStreak();
+  }
+}
+
+/* ========================================================
+   SECTION 4 — LABO VIRTUEL
+   ======================================================== */
+const labDevicesList = [
+  {name:'💡 Ampoule LED',p:15,on:false},
+  {name:'🔥 Radiateur',p:1500,on:false},
+  {name:'📺 Télévision',p:120,on:false},
+  {name:'🧊 Réfrigérateur',p:200,on:false},
+  {name:'🖥️ Ordinateur',p:300,on:false},
+  {name:'👔 Fer à repasser',p:2000,on:false},
+  {name:'🧺 Machine à laver',p:1800,on:false},
+  {name:'💨 Climatiseur',p:2500,on:false},
+];
+
+function initLab() {
+  const cont = document.getElementById('labDevices');
+  cont.innerHTML = '';
+  labDevicesList.forEach((d, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:8px 12px;';
+    row.innerHTML = `
+      <span style="font-size:.85rem;font-weight:600">${d.name}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:.78rem;color:var(--text2)">${d.p} W</span>
+        <div onclick="toggleDevice(${i},this)" style="width:42px;height:22px;background:rgba(255,255,255,.1);border-radius:50px;cursor:pointer;position:relative;transition:all .3s" id="toggle${i}">
+          <div style="width:18px;height:18px;background:#888;border-radius:50%;position:absolute;top:2px;left:2px;transition:all .3s" id="toggleKnob${i}"></div>
+        </div>
+      </div>`;
+    cont.appendChild(row);
+  });
+  updateLab();
+}
+
+function toggleDevice(idx, _) {
+  labDevicesList[idx].on = !labDevicesList[idx].on;
+  const t = document.getElementById('toggle'+idx);
+  const k = document.getElementById('toggleKnob'+idx);
+  if(labDevicesList[idx].on) {
+    t.style.background = 'var(--primary)';
+    k.style.background = '#fff';
+    k.style.left = '22px';
+    t.style.boxShadow = '0 0 8px var(--primary)';
+  } else {
+    t.style.background = 'rgba(255,255,255,.1)';
+    k.style.background = '#888';
+    k.style.left = '2px';
+    t.style.boxShadow = 'none';
+  }
+  updateLab();
+}
+
+function updateLab() {
+  const dur = parseFloat(document.getElementById('labDurSl').value);
+  document.getElementById('labDurLbl').textContent = dur;
+  const totalP = labDevicesList.filter(d=>d.on).reduce((s,d)=>s+d.p,0);
+  const totalE = (totalP * dur) / 1000;
+  const cost = totalE * 1.5;
+  document.getElementById('labTotalP').textContent = totalP.toLocaleString('fr-FR') + ' W';
+  document.getElementById('labTotalE').textContent = totalE.toFixed(2) + ' kWh';
+  document.getElementById('labCost').textContent = cost.toFixed(2) + ' DH';
+  document.getElementById('houseKwh').textContent = totalE.toFixed(1);
+  
+  const pct = Math.min(100, (totalP / 10000) * 100);
+  const bar = document.getElementById('labBar');
+  bar.style.width = pct + '%';
+  if(pct > 70) { bar.style.background = 'linear-gradient(90deg,var(--accent),var(--red))'; document.getElementById('labBarLabel').textContent = '⚠️ Consommation élevée'; }
+  else if(pct > 40) { bar.style.background = 'linear-gradient(90deg,var(--green),var(--accent))'; document.getElementById('labBarLabel').textContent = '⚡ Consommation modérée'; }
+  else { bar.style.background = 'linear-gradient(90deg,var(--green),var(--primary))'; document.getElementById('labBarLabel').textContent = '✅ Consommation économique'; }
+  
+  // House icons
+  const on = labDevicesList.filter(d=>d.on).length;
+  document.getElementById('hIcon1').textContent = on > 2 ? '💡' : '🌙';
+  document.getElementById('hIcon2').textContent = on > 4 ? '💡' : '🌙';
+  const hwEl1 = document.getElementById('hw1');
+  const hwEl2 = document.getElementById('hw2');
+  if(hwEl1) hwEl1.setAttribute('fill', on > 2 ? '#1a3a1a' : '#0d1f35');
+  if(hwEl2) hwEl2.setAttribute('fill', on > 4 ? '#1a3a1a' : '#0d1f35');
+}
+
+/* Speed game */
+let speedTimer = null;
+let speedTime = 0;
+let speedQ = null;
+let speedActive = false;
+
+const speedPool = [
+  {q:'P = 200 W, t = 3 h → E = ?',a:600,unit:'Wh',hint:'E = P×t'},
+  {q:'E = 3600 J, t = 60 s → P = ?',a:60,unit:'W',hint:'P = E÷t'},
+  {q:'R = 5 Ω, I = 4 A → U = ?',a:20,unit:'V',hint:'U = R×I'},
+  {q:'U = 220 V, I = 5 A → P = ?',a:1100,unit:'W',hint:'P = U×I'},
+  {q:'n = 600 tours, C = 300 tr/kWh → E = ?',a:2,unit:'kWh',hint:'E = n÷C'},
+  {q:'P = 1500 W, t = 2 h → E = ?',a:3,unit:'kWh',hint:'E = P×t'},
+  {q:'1 kWh = ? J',a:3600000,unit:'J',hint:'1 kWh = 3 600 000 J'},
+  {q:'R = 10 Ω, I = 3 A, t = 1800 s → E = ?',a:162000,unit:'J',hint:'E = R×I²×t'},
+];
+
+function startSpeedGame() {
+  const cont = document.getElementById('speedGame');
+  let qList = [...speedPool].sort(()=>Math.random()-.5).slice(0,5);
+  let qIdx = 0, correct = 0;
+  speedActive = true;
+  
+  function showQ() {
+    if(qIdx >= qList.length) { endSpeed(correct, qList.length); return; }
+    const q = qList[qIdx];
+    let timeLeft = 15;
+    cont.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:.82rem;color:var(--text2)">Question ${qIdx+1}/${qList.length}</span>
+        <div class="timer-display" id="speedTimerD">${timeLeft}</div>
+        <span style="color:var(--green);font-weight:700">${correct} ✅</span>
+      </div>
+      <div class="escape-panel">
+        <div style="font-size:1rem;font-weight:700;margin-bottom:12px">${q.q}</div>
+        <div style="font-size:.75rem;color:var(--text2);margin-bottom:12px">💡 ${q.hint}</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <input type="number" id="speedInput" class="calc-input" placeholder="?" style="width:140px">
+          <span class="tag">${q.unit}</span>
+          <button class="btn green" onclick="submitSpeed(${q.a})">➡️ Valider</button>
+        </div>
+        <div class="quiz-feedback" id="speedFb"></div>
+      </div>`;
+    
+    document.getElementById('speedInput').focus();
+    document.getElementById('speedInput').addEventListener('keydown', e => { if(e.key==='Enter') submitSpeed(q.a); });
+    
+    if(speedTimer) clearInterval(speedTimer);
+    speedTimer = setInterval(() => {
+      timeLeft--;
+      const td = document.getElementById('speedTimerD');
+      if(td) { td.textContent = timeLeft; if(timeLeft <= 5) td.classList.add('danger'); }
+      if(timeLeft <= 0) { clearInterval(speedTimer); nextQ(false, q.a); }
+    }, 1000);
+  }
+  
+  function submitSpeed(ans) {
+    const val = parseFloat(document.getElementById('speedInput').value);
+    clearInterval(speedTimer);
+    const fb = document.getElementById('speedFb');
+    fb.className = 'quiz-feedback show';
+    const isOk = Math.abs(val - ans) / Math.max(Math.abs(ans),1) < 0.05;
+    if(isOk) { fb.className += ' ok'; fb.textContent = '✅ Correct !'; correct++; addScore(10); }
+    else { fb.className += ' ko'; fb.textContent = `❌ La réponse était : ${ans} ${qList[qIdx].unit}`; loseStreak(); }
+    setTimeout(() => { qIdx++; showQ(); }, 1500);
+  }
+  
+  function nextQ(ok, ans) { qIdx++; showQ(); }
+  
+  showQ();
+  window.submitSpeed = submitSpeed;
+}
+
+function endSpeed(correct, total) {
+  const pct = Math.round(correct/total*100);
+  document.getElementById('speedGame').innerHTML = `
+    <div style="text-align:center;padding:20px">
+      <div style="font-size:3rem;margin-bottom:10px">${pct>=80?'🏆':pct>=60?'⭐':'📚'}</div>
+      <div style="font-size:1.2rem;font-weight:800;color:${pct>=80?'var(--green)':pct>=60?'var(--accent)':'var(--red)'}">${correct}/${total} correctes</div>
+      <div style="font-size:.85rem;color:var(--text2);margin:8px 0">${pct>=80?'Excellent ! Tu maîtrises les calculs !':pct>=60?'Bien ! Continue à pratiquer.':'Révise les formules et réessaie.'}</div>
+      <button class="btn accent" onclick="startSpeedGame()" style="margin-top:12px">🔄 Rejouer</button>
+    </div>`;
+  if(pct>=80) showBadge('⚡','Éclair !','80%+ au jeu de rapidité');
+}
+
+/* ========================================================
+   SECTION 5 — ESCAPE GAME
+   ======================================================== */
+const escapeStepsDef = [
+  {
+    title:"Étape 1 — Circuit brisé",
+    icon:"🔌",
+    desc:"Pour rétablir le circuit, calcule la puissance du générateur : U = 220 V, I = 5 A",
+    formula:"P = U × I",
+    hint:"Multiplie la tension par l'intensité.",
+    correct:1100,
+    unit:"W",
+    reward:"Le circuit principal est rétabli !"
+  },
+  {
+    title:"Étape 2 — Batterie déchargée",
+    icon:"🔋",
+    desc:"La batterie de secours R = 8 Ω, I = 10 A a fonctionné pendant t = 30 min. Quelle énergie a-t-elle fournie ?",
+    formula:"E = R × I² × t",
+    hint:"t = 30 min = 1800 s. E = 8 × 100 × 1800",
+    correct:1440000,
+    unit:"J",
+    reward:"La batterie est rechargée !"
+  },
+  {
+    title:"Étape 3 — Compteur bloqué",
+    icon:"⚡",
+    desc:"Le compteur de secours indique C = 500 tr/kWh. Le disque a fait n = 250 tours. Quelle énergie a été consommée ?",
+    formula:"E = n ÷ C",
+    hint:"Divise le nombre de tours par la constante.",
+    correct:0.5,
+    unit:"kWh",
+    reward:"Le compteur fonctionne à nouveau !"
+  },
+  {
+    title:"Étape 4 — Facture urgente",
+    icon:"📄",
+    desc:"L'électricien doit payer : 150 kWh à 1,20 DH/kWh + TVA 14%. Quel est le montant TTC ?",
+    formula:"TTC = HT × (1 + 14/100)",
+    hint:"HT = 150 × 1.20 = 180 DH. TTC = 180 × 1.14",
+    correct:205.2,
+    unit:"DH",
+    reward:"La facture est réglée. La maison est alimentée !"
+  }
+];
+
+let escapeStep = 0;
+function initEscape() {
+  escapeStep = 0;
+  renderEscapeStep();
+  updateEscapeDots();
+}
+function restartEscape() { initEscape(); document.getElementById('escapeSuccess').style.display='none'; document.getElementById('escapeContainer').style.display='block'; }
+
+function renderEscapeStep() {
+  const s = escapeStepsDef[escapeStep];
+  document.getElementById('escapeContainer').innerHTML = `
+    <div class="escape-panel">
+      <div style="font-size:2.5rem;text-align:center;margin-bottom:10px">${s.icon}</div>
+      <div style="font-size:1rem;font-weight:800;color:var(--accent);text-align:center;margin-bottom:6px">${s.title}</div>
+      <div style="font-size:.88rem;line-height:1.7;color:var(--text2);margin-bottom:14px">${s.desc}</div>
+      <div class="formula-box" style="margin-bottom:14px;padding:12px">
+        <div style="font-size:1.1rem;font-family:monospace;color:#fff">${s.formula}</div>
+      </div>
+      <div class="info-box warning" style="margin-bottom:14px;font-size:.8rem">💡 Indice : ${s.hint}</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <input type="number" class="calc-input" id="escInput" placeholder="Ta réponse" style="width:150px">
+        <span class="tag accent">${s.unit}</span>
+        <button class="btn green" onclick="checkEscapeStep()">🔓 Déverrouiller</button>
+      </div>
+      <div class="quiz-feedback" id="escapeFb"></div>
+    </div>`;
+  document.getElementById('escInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkEscapeStep(); });
+}
+
+function checkEscapeStep() {
+  const val = parseFloat(document.getElementById('escInput').value);
+  const s = escapeStepsDef[escapeStep];
+  const fb = document.getElementById('escapeFb');
+  fb.className = 'quiz-feedback show';
+  const tol = Math.max(Math.abs(s.correct)*0.02, 0.1);
+  if(Math.abs(val-s.correct) <= tol) {
+    fb.className += ' ok';
+    fb.textContent = `✅ ${s.reward}`;
+    addScore(25);
+    updateEscapeDots();
+    setTimeout(() => {
+      escapeStep++;
+      if(escapeStep >= escapeStepsDef.length) {
+        document.getElementById('escapeContainer').style.display='none';
+        document.getElementById('escapeSuccess').style.display='block';
+        showBadge('🎮','Escape Master !','Escape game complété !');
+      } else { renderEscapeStep(); updateEscapeDots(); }
+    }, 2000);
+  } else {
+    fb.className += ' ko';
+    fb.textContent = `❌ Pas tout à fait. Relis l'indice et recalcule.`;
+    loseStreak();
+  }
+}
+
+function updateEscapeDots() {
+  const cont = document.getElementById('escapeSteps');
+  cont.innerHTML = '';
+  escapeStepsDef.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    if(i < escapeStep) d.classList.add('done');
+    else if(i === escapeStep) d.classList.add('active');
+    cont.appendChild(d);
+  });
+}
+
+/* ========================================================
+   SECTION 6 — MIND MAP
+   ======================================================== */
+const mmNodes = [
+  {id:'center',label:'Énergie\nÉlectrique',x:50,y:50,center:true,info:'L\'énergie électrique E est l\'énergie consommée par un appareil pendant son fonctionnement. Unité : Joule (J).'},
+  {id:'n1',label:'E = P × t',x:22,y:22,info:'Relation fondamentale : Énergie = Puissance × Durée. E en J, P en W, t en s.'},
+  {id:'n2',label:'P = U × I',x:78,y:22,info:'Puissance électrique : P = U × I. P en W, U en V, I en A.'},
+  {id:'n3',label:'E = U×I×t',x:15,y:65,info:'Énergie pour appareil de chauffage : E = U × I × t = R × I² × t.'},
+  {id:'n4',label:'U = R × I',x:85,y:65,info:'Loi d\'Ohm : Tension = Résistance × Intensité. R en Ohm (Ω).'},
+  {id:'n5',label:'Unités\nJ·kJ·Wh·kWh',x:50,y:18,info:'1 kWh = 3 600 000 J. 1 Wh = 3 600 J. 1 kJ = 1 000 J.'},
+  {id:'n6',label:'Compteur\nC = tr/kWh',x:20,y:82,info:'Le compteur électrique mesure l\'énergie consommée. E = n ÷ C (kWh).'},
+  {id:'n7',label:'Facture\nkWh × Prix',x:80,y:82,info:'Coût = Énergie (kWh) × Prix unitaire. Montant TTC = HT × (1 + taxes).'},
+  {id:'n8',label:'E = R×I²×t',x:50,y:83,info:'Pour un appareil de chauffage de résistance R : E = R × I² × t.'},
+];
+const mmLinks = [
+  ['center','n1'],['center','n2'],['center','n3'],['center','n4'],
+  ['center','n5'],['center','n6'],['center','n7'],['center','n8'],
+  ['n2','n4'],['n1','n3'],
+];
+
+function initMindMap() {
+  const map = document.getElementById('mindMap');
+  const svg = document.getElementById('mmSvg');
+  
+  // Draw links in SVG
+  const rect = map.getBoundingClientRect();
+  const W = map.offsetWidth;
+  const H = map.offsetHeight || 380;
+  
+  mmLinks.forEach(([a,b]) => {
+    const na = mmNodes.find(n=>n.id===a);
+    const nb = mmNodes.find(n=>n.id===b);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', na.x/100*W);
+    line.setAttribute('y1', na.y/100*H);
+    line.setAttribute('x2', nb.x/100*W);
+    line.setAttribute('y2', nb.y/100*H);
+    line.setAttribute('stroke','rgba(0,212,255,0.2)');
+    line.setAttribute('stroke-width','1.5');
+    line.setAttribute('stroke-dasharray','4,4');
+    svg.appendChild(line);
+  });
+  
+  // Place nodes
+  mmNodes.forEach(node => {
+    const el = document.createElement('div');
+    el.className = 'mm-node' + (node.center ? ' center' : '');
+    el.style.left = node.x + '%';
+    el.style.top = node.y + '%';
+    el.innerHTML = node.label.replace('\n','<br>');
+    el.onclick = () => showMMInfo(node);
+    map.appendChild(el);
+  });
+}
+
+function showMMInfo(node) {
+  document.getElementById('mmDetail').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--primary)"></div>
+      <strong style="color:var(--primary)">${node.label.replace('\n',' ')}</strong>
+    </div>
+    <div style="font-size:.85rem;line-height:1.6;color:var(--text)">${node.info}</div>`;
+  addScore(2);
+}
+
+// Drag and Drop — Grandeur ↔ Unité
+const dndItems = [
+  {id:'e',label:'Énergie (E)',target:'j'},
+  {id:'p',label:'Puissance (P)',target:'w'},
+  {id:'t',label:'Durée (t)',target:'s'},
+  {id:'u',label:'Tension (U)',target:'v'},
+  {id:'i',label:'Intensité (I)',target:'a'},
+  {id:'r',label:'Résistance (R)',target:'o'},
+];
+const dndTargets = [
+  {id:'j',label:'Joule (J)'},
+  {id:'w',label:'Watt (W)'},
+  {id:'s',label:'Seconde (s)'},
+  {id:'v',label:'Volt (V)'},
+  {id:'a',label:'Ampère (A)'},
+  {id:'o',label:'Ohm (Ω)'},
+];
+
+let draggingId = null;
+function initDnD() {
+  const src = document.getElementById('dragSource');
+  src.innerHTML = '';
+  dndItems.sort(()=>Math.random()-.5).forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.textContent = item.label;
+    el.dataset.id = item.id;
+    el.addEventListener('dragstart', e => { draggingId = item.id; el.classList.add('dragging'); });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    src.appendChild(el);
+  });
+  
+  const zones = document.getElementById('dropZones');
+  zones.innerHTML = '';
+  dndTargets.forEach(target => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px';
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'min-width:120px;font-size:.85rem;font-weight:600;color:var(--text2)';
+    lbl.textContent = target.label;
+    const zone = document.createElement('div');
+    zone.className = 'drop-target';
+    zone.dataset.target = target.id;
+    zone.style.minWidth = '150px';
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      if(zone.children.length > 0) return;
+      const srcEl = document.querySelector(`[data-id="${draggingId}"]`);
+      if(srcEl) {
+        const clone = srcEl.cloneNode(true);
+        clone.draggable = false;
+        clone.style.cursor='default';
+        clone.onclick = () => { zone.removeChild(clone); srcEl.style.opacity='1'; srcEl.draggable=true; };
+        zone.appendChild(clone);
+        srcEl.style.opacity='.3';
+        srcEl.draggable=false;
+      }
+    });
+    row.appendChild(lbl);
+    row.appendChild(zone);
+    zones.appendChild(row);
+  });
+}
+
+function checkDnD() {
+  const zones = document.querySelectorAll('.drop-target');
+  let ok = 0;
+  zones.forEach(z => {
+    const tgt = z.dataset.target;
+    const placed = z.querySelector('.drag-item');
+    z.classList.remove('correct-drop','wrong-drop');
+    if(placed) {
+      const pid = placed.dataset.id;
+      const item = dndItems.find(i=>i.id===pid);
+      if(item && item.target === tgt) { z.classList.add('correct-drop'); ok++; }
+      else z.classList.add('wrong-drop');
+    }
+  });
+  const fb = document.getElementById('dndFb');
+  fb.className = 'quiz-feedback show';
+  if(ok === dndItems.length) {
+    fb.className += ' ok'; fb.textContent = '✅ Toutes les associations sont correctes !'; addScore(20); showBadge('🎯','Bullseye !','Drag & drop parfait !');
+  } else {
+    fb.className += ' ko'; fb.textContent = `${ok}/${dndItems.length} correctes. Les zones vertes sont bonnes, les rouges ont une erreur.`; loseStreak();
+  }
+}
+
+function resetDnD() {
+  document.querySelectorAll('.drop-target').forEach(z => z.innerHTML='');
+  document.querySelectorAll('#dragSource .drag-item').forEach(el => { el.style.opacity='1'; el.draggable=true; });
+  document.getElementById('dndFb').className='quiz-feedback';
+}
+
+// Sort appareils
+const sortItems = [
+  {name:'💡 Ampoule LED',p:15},
+  {name:'📱 Chargeur',p:25},
+  {name:'📺 Télévision',p:120},
+  {name:'🖥️ Ordinateur',p:300},
+  {name:'🔥 Radiateur',p:1500},
+  {name:'👔 Fer à repasser',p:2000},
+];
+let sortOrder = [];
+function initSort() {
+  sortOrder = [...sortItems].sort(()=>Math.random()-.5);
+  const cont = document.getElementById('sortContainer');
+  cont.innerHTML = '';
+  const list = document.createElement('div');
+  list.id = 'sortList';
+  list.style.cssText = 'display:flex;flex-direction:column;gap:8px';
+  sortOrder.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.p = item.p;
+    el.dataset.idx = i;
+    el.style.cssText += ';display:flex;justify-content:space-between;align-items:center;cursor:grab';
+    el.innerHTML = `<span>${item.name}</span><span style="font-size:.78rem;color:var(--text2)">??? W</span>`;
+    el.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', i); });
+    el.addEventListener('dragover', e => e.preventDefault());
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      const toIdx = parseInt(el.dataset.idx);
+      [sortOrder[fromIdx], sortOrder[toIdx]] = [sortOrder[toIdx], sortOrder[fromIdx]];
+      initSort2(sortOrder);
+    });
+    list.appendChild(el);
+  });
+  cont.appendChild(list);
+  document.getElementById('sortFb').className='quiz-feedback';
+}
+function initSort2(ord) {
+  sortOrder = ord;
+  const list = document.getElementById('sortList');
+  list.innerHTML='';
+  ord.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.p = item.p;
+    el.dataset.idx = i;
+    el.style.cssText += ';display:flex;justify-content:space-between;align-items:center;cursor:grab';
+    el.innerHTML = `<span>${item.name}</span><span style="font-size:.78rem;color:var(--text2)">??? W</span>`;
+    el.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', i));
+    el.addEventListener('dragover', e => e.preventDefault());
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      const toIdx = parseInt(el.dataset.idx);
+      [sortOrder[fromIdx], sortOrder[toIdx]] = [sortOrder[toIdx], sortOrder[fromIdx]];
+      initSort2(sortOrder);
+    });
+    list.appendChild(el);
+  });
+}
+function checkSort() {
+  const fb = document.getElementById('sortFb');
+  fb.className = 'quiz-feedback show';
+  const sorted = [...sortOrder].map(i=>i.p);
+  const correct = [...sortItems].sort((a,b)=>a.p-b.p).map(i=>i.p);
+  if(JSON.stringify(sorted)===JSON.stringify(correct)) {
+    fb.className += ' ok';
+    fb.textContent = '✅ Parfait ! Ordre correct : ' + sortItems.sort((a,b)=>a.p-b.p).map(i=>`${i.name} (${i.p}W)`).join(' < ');
+    addScore(15);
+  } else {
+    fb.className += ' ko';
+    fb.textContent = '❌ Pas tout à fait. Classe du moins puissant au plus puissant. Rappelle-toi : 1 kW = 1000 W';
+    loseStreak();
+    // Reveal powers
+    document.querySelectorAll('#sortList .drag-item span:last-child').forEach((el, i) => {
+      el.textContent = sortOrder[i].p + ' W';
+      el.style.color = 'var(--accent)';
+    });
+  }
+}
+
+/* ========================================================
+   SECTION 7 — FINAL CHALLENGE
+   ======================================================== */
+const finalLevels = [
+  {
+    level:1, title:'Niveau 1 — Compréhension', color:'var(--green)',
+    q:'Pourquoi un appareil de chauffage (1500 W) coûte-t-il plus cher à utiliser qu\'une lampe LED (15 W) pendant le même temps ?',
+    type:'mcq',
+    opts:['Parce qu\'il est plus grand','Parce que sa puissance est 100× plus élevée donc il consomme 100× plus d\'énergie','Parce qu\'il produit de la chaleur','Parce qu\'il est branché différemment'],
+    a:1,exp:'E = P × t. Si P est 100× plus grande et t est identique, E est 100× plus grande. Le coût est proportionnel à l\'énergie consommée.'
+  },
+  {
+    level:2, title:'Niveau 2 — Calcul', color:'var(--primary)',
+    q:'Un climatiseur de puissance P = 2500 W fonctionne 6 heures par jour pendant 30 jours. Calculer l\'énergie consommée en kWh et le coût sachant que 1 kWh = 1,50 DH.',
+    type:'fill',
+    fields:[
+      {label:'Énergie E (kWh)',correct:450,unit:'kWh',hint:'E = 2500 W × (6×30) h ÷ 1000'},
+      {label:'Coût total (DH)',correct:675,unit:'DH',hint:'Coût = 450 × 1.50'},
+    ]
+  },
+  {
+    level:3, title:'Niveau 3 — Analyse', color:'var(--accent)',
+    q:'Un compteur indique C = 600 tr/kWh. En 10 minutes, on observe 120 tours. Quelle est la puissance de l\'appareil branché ?',
+    type:'fill',
+    fields:[
+      {label:'Énergie E (kWh)',correct:0.2,unit:'kWh',hint:'E = n÷C = 120÷600'},
+      {label:'Durée t (h)',correct:1/6,unit:'h',hint:'10 min = 10/60 h'},
+      {label:'Puissance P (W)',correct:1200,unit:'W',hint:'P = E÷t = 0.2÷(1/6) = 1200 W'},
+    ]
+  },
+  {
+    level:4, title:'Niveau 4 — Situation réelle', color:'var(--accent2)',
+    q:'Un foyer a consommé 350 kWh ce mois-ci. La résistance du chauffe-eau est R = 20 Ω. Il est alimenté par 220 V. Pendant combien d\'heures a-t-il fonctionné, sachant qu\'il a consommé 60% de l\'énergie totale ?',
+    type:'fill',
+    fields:[
+      {label:'Énergie chauffe-eau (kWh)',correct:210,unit:'kWh',hint:'60% × 350 = 210 kWh'},
+      {label:'Intensité I (A)',correct:11,unit:'A',hint:'I = U/R = 220/20 = 11 A'},
+      {label:'Puissance P (W)',correct:2420,unit:'W',hint:'P = U×I = 220×11 = 2420 W'},
+      {label:'Durée t (h)',correct:86.8,unit:'h',hint:'t = E÷P = 210 000 Wh ÷ 2420 W ≈ 86.8 h'},
+    ]
+  }
+];
+
+let finalLevel = 0;
+let finalAnswers = {};
+
+function initFinalChallenge() {
+  finalLevel = 0;
+  renderLevelIndicator();
+  renderFinalLevel();
+}
+
+function renderLevelIndicator() {
+  const c = document.getElementById('levelIndicator');
+  c.innerHTML = '';
+  finalLevels.forEach((l, i) => {
+    const el = document.createElement('div');
+    el.style.cssText = `padding:8px 16px;border-radius:50px;font-size:.78rem;font-weight:700;border:1.5px solid ${i<=finalLevel?l.color:'rgba(255,255,255,0.15)'};color:${i<=finalLevel?l.color:'var(--text2)'};background:${i===finalLevel?'rgba(255,255,255,0.05)':'transparent'};transition:all .3s`;
+    el.textContent = l.title;
+    c.appendChild(el);
+  });
+}
+
+function renderFinalLevel() {
+  const l = finalLevels[finalLevel];
+  const cont = document.getElementById('finalChallenge');
+  
+  let innerHTML = `
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid ${l.color}33;border-radius:14px;padding:20px;margin-bottom:16px">
+      <div style="font-size:.82rem;font-weight:700;color:${l.color};margin-bottom:10px">${l.title}</div>
+      <div style="font-size:.95rem;line-height:1.7;margin-bottom:16px">${l.q}</div>`;
+  
+  if(l.type === 'mcq') {
+    innerHTML += `<div class="quiz-opts" id="finalOpts">`;
+    l.opts.forEach((o, i) => {
+      innerHTML += `<button class="quiz-opt" onclick="answerFinalMCQ(${i},${l.a},'${l.exp.replace(/'/g,"\\'")}',${finalLevel})">${o}</button>`;
+    });
+    innerHTML += '</div>';
+  } else {
+    innerHTML += '<div style="display:flex;flex-direction:column;gap:10px" id="finalFills">';
+    l.fields.forEach((f, i) => {
+      innerHTML += `
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:.85rem;min-width:200px">${f.label}</span>
+          <input type="number" class="calc-input" id="finalF${i}" placeholder="?">
+          <span class="tag">${f.unit}</span>
+          <span style="font-size:.75rem;color:var(--text2)">💡 ${f.hint}</span>
+        </div>`;
+    });
+    innerHTML += '</div>';
+    innerHTML += `<button class="btn green" onclick="checkFinalFill(${finalLevel})" style="margin-top:14px">✅ Vérifier</button>`;
+  }
+  
+  innerHTML += `<div class="quiz-feedback" id="finalFb"></div></div>`;
+  cont.innerHTML = innerHTML;
+}
+
+function answerFinalMCQ(chosen, correct, exp, lvl) {
+  const opts = document.querySelectorAll('#finalOpts .quiz-opt');
+  opts.forEach((b,i) => { b.disabled=true; if(i===correct) b.classList.add('correct'); else if(i===chosen&&chosen!==correct) b.classList.add('wrong'); });
+  const fb = document.getElementById('finalFb');
+  fb.className = 'quiz-feedback show';
+  if(chosen === correct) {
+    fb.className += ' ok'; fb.textContent = '✅ Excellent ! ' + exp;
+    addScore(30);
+    setTimeout(() => advanceFinalLevel(lvl), 2500);
+  } else {
+    fb.className += ' ko'; fb.textContent = '❌ ' + exp; loseStreak();
+  }
+}
+
+function checkFinalFill(lvl) {
+  const l = finalLevels[lvl];
+  const fb = document.getElementById('finalFb');
+  let ok = 0;
+  l.fields.forEach((f, i) => {
+    const val = parseFloat(document.getElementById('finalF'+i).value);
+    const tol = Math.max(Math.abs(f.correct)*0.05, 0.5);
+    const inp = document.getElementById('finalF'+i);
+    if(Math.abs(val-f.correct) <= tol) { ok++; inp.classList.add('ok'); }
+    else inp.classList.add('ko');
+  });
+  fb.className = 'quiz-feedback show';
+  if(ok === l.fields.length) {
+    fb.className += ' ok';
+    fb.textContent = `✅ Parfait ! ${ok}/${l.fields.length} correctes. Niveau suivant !`;
+    addScore(35 + lvl*10);
+    setTimeout(() => advanceFinalLevel(lvl), 2500);
+  } else {
+    fb.className += ' ko';
+    fb.textContent = `${ok}/${l.fields.length} correctes. Les champs rouges sont incorrects.`;
+    loseStreak();
+  }
+}
+
+function advanceFinalLevel(lvl) {
+  if(lvl >= finalLevels.length-1) {
+    document.getElementById('finalChallenge').innerHTML = `
+      <div style="text-align:center;padding:40px">
+        <div style="font-size:5rem;margin-bottom:16px;animation:bounce-in .5s ease">🏆</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--accent);margin-bottom:8px">Champion de l'énergie électrique !</div>
+        <div style="font-size:.9rem;color:var(--text2);margin-bottom:16px">Tu as complété les 4 niveaux avec succès. Tu maîtrises parfaitement l'énergie électrique !</div>
+        <div style="font-size:.85rem;color:var(--green);font-weight:700">Score final : ${score} points · Badges : ${badges.length}</div>
+        <button class="btn accent" onclick="initFinalChallenge()" style="margin-top:20px">🔄 Recommencer</button>
+      </div>`;
+    showBadge('🌟','Champion !','Défi final complété !');
+    return;
+  }
+  finalLevel = lvl + 1;
+  renderLevelIndicator();
+  renderFinalLevel();
+}
+
+/* ========================================================
+   INIT ON LOAD
+   ======================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+  resetPuzzle();
+  loadQuiz1();
+  loadFill1();
+  loadQuiz2();
+  loadErrorHunt();
+  loadQuiz3();
+  updateExp1();
+  updateHeating();
+  updateConst();
+  completedSections.add('s1');
+  updateProgress();
+});
+
+// Init s3 meter on section load handled by showSection
+// Speed game global exposed
+window.submitSpeed = null;
+</script>
+</body>
+</html>
